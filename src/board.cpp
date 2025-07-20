@@ -1,9 +1,11 @@
 #include <vector>
 #include <queue>
+#include <set>
+#include <algorithm>
+
 #include "raylib.h"
 #include "board.h"
 #include "node.h"
-#include <algorithm>
 using std::vector;
 
 #define MAX_NODES 1000
@@ -121,11 +123,23 @@ void Board::removeNode(Vector2 mousePosition) {
     *nodeToRemove = Node(-1, {0.0f, 0.0f}, 0.0f);
 }
 
-void Board::draw() {
+void Board::drawNodes() {
     for (const Node& node : nodes) {
         if (!node.isNodeValid()) continue;
 
         Vector2 nodePosition = node.getNodePosition();
         DrawCircle(nodePosition.x, nodePosition.y, node.getNodeRadius(), RED);
     }  
+}
+
+void Board::drawEdges() {
+    for (const Node& node : nodes) {
+        if (!node.isNodeValid()) continue;
+
+        std::set<int> neighbors = node.getNodeNeighbors();
+        for (auto it = neighbors.begin(); it != neighbors.end(); it++) {
+            Node* neighbor = &nodes[*it];
+            DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 5.0f, GREEN);
+        }
+    }         
 }

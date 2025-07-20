@@ -19,6 +19,7 @@ public:
     int getNodeIndex() const;
     Vector2 getNodePosition() const;
     float getNodeRadius() const;
+    std::set<int> getNodeNeighbors() const;
 
     bool isNodeActive() const;
     bool isNodeValid() const;

@@ -28,6 +28,10 @@ float Node::getNodeRadius() const {
     return nodeRadius;
 }
 
+std::set<int> Node::getNodeNeighbors() const {
+    return neighbors;
+}
+
 bool Node::isNodeActive() const {
     return isActive;
 }

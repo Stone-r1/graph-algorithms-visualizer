@@ -1,5 +1,6 @@
 #include <vector>
 #include <queue>
+#include <unordered_map>
 #include "raylib.h"
 #include "node.h"
 using std::vector;
@@ -41,6 +42,7 @@ public:
     void stopRunning();
     void resetRunning();
 
-    void draw();
+    void drawNodes();
+    void drawEdges();
     void drawTraversal();
 };
