@@ -1,20 +1,25 @@
+#ifndef NODE_H
+#define NODE_H
+
 #include "raylib.h"
 
 class Node {
 private:
-    int nodeNumber;
+    int nodeIndex;
     Vector2 nodePosition;
+    float nodeRadius;
     bool isActive;
 
 public:
-    Node();
+    Node(int index, Vector2 position);
     
-    int getNode() const;
+    int getNodeIndex() const;
+    Vector2 getNodePosition() const;
+    float getNodeRadius() const;
     bool isNodeActive() const;
 
-    void setNodePosition(Vector2 position);
-    Vector2 getNodePosition(Vector2 position);
-
-    int isInRadiusDomain(Vector2 mouse);
-    void drawNode();
+    int isInRadiusDomain(const Node& node, Vector2 mousePosition);
+    void drawNode(const Node& node, Vector2 mousePosition);
 };
+
+#endif
