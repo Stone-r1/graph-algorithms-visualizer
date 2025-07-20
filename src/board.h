@@ -1,45 +1,38 @@
 #include <vector>
 #include <queue>
 #include "raylib.h"
+#include "node.h"
 using std::vector;
 
 class Board {
 private:
     int edges;
-    int nodes;
-    int lastNode;
+    int lastNodeIndex;
     int currentStep;
     bool isDirected;
     bool isRunning;
-    Vector2 lastClickedNode;
+    Node lastClickedNode;
 
+    vector<Node> nodes;
     vector<vector<int>> graph;
     vector<bool> visited;
-    vector<Vector2> nodePositions;
+    vector<Node> nodePositions;
     vector<int> traversalOrder;
-    std::queue<int> BFSQueue;
 
 public:
     Board();
 
     int getEdges() const;
-    void increaseEdges();
-    void clearEdges();
-    
-    int getNode() const;
-    void increaseNodes();
-    void clearNods();
+    void increaseEdges();    
+    void increaseLastNodeIndex();
 
-    void addNode(Vector2 pos);
-    void addEdge(int node1, int node2);
-    void removeEdge(int node1, int node2);
-    bool hasEdge(int node1, int node2);
+    void addNode(Vector2 mousePosition);
+    void addEdge(Node node1, Node node2);
+    void removeEdge(Node node1, Node node2);
+    void removeNode(Node node);
+    bool hasEdge(Node node1, Node node2);
     void clearGraph();
 
-    bool isInNodeDomain(Vector2 mouse);
-
-    void startDFS(int firstNode);
-    void startBFS(int firstNode);
     void stopRunning();
     void resetRunning();
 

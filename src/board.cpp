@@ -2,104 +2,67 @@
 #include <queue>
 #include "raylib.h"
 #include "board.h"
+#include "node.h"
 #include <iostream>
 using std::vector;
 
 #define MAX_NODES 1000
 #define RADIUS 50
 
-Board::Board() {
-    edges = 0;
-    nodes = 0;
-    lastNode = 0;
-    currentStep = 0;
-    isDirected = false;
-    isRunning = false;
+Board::Board() :
+    edges(0),
+    lastNodeIndex(0),
+    currentStep(0),
+    isDirected(false),
+    isRunning(false),
+    lastClickedNode(-1, {0, 0}, 0),
+    nodes(MAX_NODES),
+    graph(MAX_NODES, vector<int>(MAX_NODES)),
+    visited(MAX_NODES, false),
+    nodePositions(MAX_NODES, Node(-1, {0, 0}, 0)),
+    traversalOrder(MAX_NODES)
+{}
 
-    graph.assign(MAX_NODES, vector<int>(MAX_NODES));
-    visited.resize(MAX_NODES, false);
-    traversalOrder.resize(MAX_NODES);
-    nodePositions.resize(MAX_NODES);
-    nodePositions.clear();
+void Board::addNode(Vector2 mousePosition) {
+    Node currentNode = Node(lastNodeIndex, mousePosition, RADIUS);
+    nodePositions[lastNodeIndex] = currentNode;
+
+
 }
-
-void Board::draw() {
-    for (Vector2 mouse : nodePositions) {
-        DrawCircle(mouse.x, mouse.y, RADIUS, RED);
-    }
-}
-
-void Board::addNode(Vector2 mouse) {
-    nodePositions.emplace_back(mouse);
-    lastNode++;
-}
-
-void Board::addEdge(int node1, int node2) {
-    graph[node1].push_back(node2);
-    if (!isDirected) {
-        graph[node2].push_back(node1);
-    }
-}
-
-bool Board::isInNodeDomain(Vector2 mouse) {
-    for (Vector2 position : nodePositions) {
-        float dx = mouse.x - position.x;
-        float dy = mouse.y - position.y;
-        float distanceSquared = dx * dx - dy * dy;
-        
-        if (RADIUS * RADIUS >= distanceSquared) {
-            std::cout << "YES\n";
-            lastClickedNode = position;
-            return true;
-        }
-    }
-
-    return false;
-}
-
-/*
-int Board::getNode() const {
-    return lastClickedNode;
-}
-*/
-
 
 /*
 private:
-    int edges = 0;
-    int nodes = 0;
-    int lastNode = 0;
-    int currentStep = 0;
-    bool isDirected = false;
-    bool isRunning = false;
+    int edges;
+    int lastNodeIndex;
+    int currentStep;
+    bool isDirected;
+    bool isRunning;
+    Node lastClickedNode;
 
-    vector<vector<int>> graph;
+    vector<vector<Node>> graph;
     vector<bool> visited;
-    vector<Vector2> nodePositions;
+    vector<Node> nodePositions;
     vector<int> traversalOrder;
-    std::queue<int> BFSQueue;
 
 public:
-    int getEdges() const;
-    void increaseEdges();
-    void clearEdges();
-    
-    int getNodes() const;
-    void increaseNodes();
-    void clearNods();
+    Board();
 
-    void addNode(Vector2 pos);
-    void addEdge(int node1, int node2);
-    void removeEdge(int node1, int node2);
-    bool hasEdge(int node1, int node2);
+    int getEdges() const;
+    void increaseEdges();    
+    void increaseLastNodeIndex();
+
+    void addNode(Node node);
+    void addEdge(Node node1, Node node2);
+    void removeEdge(Node node1, Node node2);
+    void removeNode(Node node);
+    bool hasEdge(Node node1, Node node2);
     void clearGraph();
 
-    void startDFS(int firstNode);
-    void startBFS(int firstNode);
     void stopRunning();
     void resetRunning();
 
     void draw();
     void drawTraversal();
+};
 */
 
