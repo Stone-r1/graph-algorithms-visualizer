@@ -13,21 +13,18 @@ private:
     bool isRunning;
     Node lastClickedNode;
 
-    vector<Node> nodes;
     vector<vector<int>> graph;
     vector<bool> visited;
-    vector<Node> nodePositions;
+    vector<Node> nodes;
     vector<int> traversalOrder;
 
 public:
     Board();
 
     int getEdges() const;
-    void increaseEdges();    
-    void increaseLastNodeIndex();
 
     void addNode(Vector2 mousePosition);
-    void addEdge(Node node1, Node node2);
+    void addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
     void removeEdge(Node node1, Node node2);
     void removeNode(Node node);
     bool hasEdge(Node node1, Node node2);
