@@ -50,6 +50,10 @@ void Node::addNeighbor(int nodeID) {
     neighbors.insert(nodeID);
 }
 
+void Node::removeNeighbor(int nodeID) {
+    neighbors.erase(nodeID);
+}
+
 void Node::changeNodeStatus() {
     isActive = !isActive;
 }

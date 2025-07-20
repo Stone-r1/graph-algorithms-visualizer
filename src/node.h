@@ -26,6 +26,7 @@ public:
     bool isInRadiusDomain(Vector2 mousePosition) const;
 
     void addNeighbor(int nodeID);
+    void removeNeighbor(int nodeID);
     void changeNodeStatus();
     void drawNode() const;
 };

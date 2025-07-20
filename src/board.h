@@ -4,6 +4,13 @@
 #include "node.h"
 using std::vector;
 
+
+struct NodePair {
+    Node* firstNode = nullptr;
+    Node* secondNode = nullptr;
+};
+
+
 class Board {
 private:
     int edges;
@@ -18,6 +25,8 @@ private:
     vector<Node> nodes;
     vector<int> traversalOrder;
 
+    NodePair findNodesFromPositions(Vector2 firstNodePosition, Vector2 secondNodePosition);
+
 public:
     Board();
 
@@ -25,7 +34,7 @@ public:
 
     void addNode(Vector2 mousePosition);
     void addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
-    void removeEdge(Node node1, Node node2);
+    void removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
     void removeNode(Node node);
     bool hasEdge(Node node1, Node node2);
     void clearGraph();
