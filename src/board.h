@@ -7,9 +7,11 @@ class Board {
 private:
     int edges;
     int nodes;
+    int lastNode;
     int currentStep;
     bool isDirected;
     bool isRunning;
+    Vector2 lastClickedNode;
 
     vector<vector<int>> graph;
     vector<bool> visited;
@@ -24,7 +26,7 @@ public:
     void increaseEdges();
     void clearEdges();
     
-    int getNodes() const;
+    int getNode() const;
     void increaseNodes();
     void clearNods();
 
@@ -33,6 +35,8 @@ public:
     void removeEdge(int node1, int node2);
     bool hasEdge(int node1, int node2);
     void clearGraph();
+
+    bool isInNodeDomain(Vector2 mouse);
 
     void startDFS(int firstNode);
     void startBFS(int firstNode);
