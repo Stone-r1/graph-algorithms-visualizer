@@ -39,6 +39,16 @@ NodePair Board::findNodesFromPositions(Vector2 firstNodePosition, Vector2 second
     return pair;
 }
 
+Vector2 Board::isInNodeDomain(Vector2 mousePosition) {
+    for (const Node& node : nodes) {
+        if (node.isNodeValid() && node.isInRadiusDomain(mousePosition)) {
+            return node.getNodePosition();
+        }
+    }
+
+    return {0.0f, 0.0f};
+}
+
 void Board::addNode(Vector2 mousePosition) {
     for (const Node& node : nodes) {
         float minDistance = node.getNodeRadius() * 3;

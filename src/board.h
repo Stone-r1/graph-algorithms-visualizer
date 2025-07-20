@@ -31,7 +31,7 @@ private:
 public:
     Board();
 
-    int getEdges() const;
+    Vector2 isInNodeDomain(Vector2 mousePosition);
 
     void addNode(Vector2 mousePosition);
     void addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
