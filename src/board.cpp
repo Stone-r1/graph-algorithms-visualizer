@@ -27,11 +27,11 @@ NodePair Board::findNodesFromPositions(Vector2 firstNodePosition, Vector2 second
     NodePair pair; 
 
     for (Node& node : nodes) {
-        if (node.isInRadiusDomain(firstNodePosition)) {
+        if (node.isNodeValid() && node.isInRadiusDomain(firstNodePosition)) {
             pair.firstNode = &node;
         }
 
-        if (node.isInRadiusDomain(secondNodePosition)) {
+        if (node.isNodeValid() && node.isInRadiusDomain(secondNodePosition)) {
             pair.secondNode = &node;
         }
     }
@@ -83,13 +83,15 @@ void Board::removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
 }
 
 void Board::removeNode(Vector2 mousePosition) {
-    Node* nodeToRemove;
+    Node* nodeToRemove = nullptr;
     for (int i = 0; i < lastNodeIndex; i++) {
-        if (nodes[i].isInRadiusDomain(mousePosition)) {
+        if (nodes[i].isNodeValid() && nodes[i].isInRadiusDomain(mousePosition)) {
             nodeToRemove = &nodes[i];
             break;
         }
     }
+
+    if (!nodeToRemove) return;
 
     graph[nodeToRemove->getNodeIndex()].clear();
     nodeToRemove->removeNeighbors();
