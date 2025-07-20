@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(raylib REQUIRED)
 set(SOURCES
-    src/main.cpp
+    src/test.cpp
+    src/board.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
