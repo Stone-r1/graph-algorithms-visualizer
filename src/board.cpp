@@ -82,14 +82,35 @@ void Board::removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
     }
 }
 
+void Board::removeNode(Vector2 mousePosition) {
+    Node* nodeToRemove;
+    for (int i = 0; i < lastNodeIndex; i++) {
+        if (nodes[i].isInRadiusDomain(mousePosition)) {
+            nodeToRemove = &nodes[i];
+            break;
+        }
+    }
+
+    graph[nodeToRemove->getNodeIndex()].clear();
+    nodeToRemove->removeNeighbors();
+
+    for (int i = 0; i < lastNodeIndex; i++) {
+        if (i == nodeToRemove->getNodeIndex()) continue;
+
+        auto& adj = graph[i];
+        adj.erase(std::remove(adj.begin(), adj.end(), nodeToRemove->getNodeIndex()), adj.end());
+        nodes[i].removeNeighbor(nodeToRemove->getNodeIndex());
+    }
+
+    // mark node as invalid
+    *nodeToRemove = Node(-1, {0.0f, 0.0f}, 0.0f);
+}
+
 /*
     Board();
 
     int getEdges() const;
 
-    void removeEdge(Node node1, Node node2);
-    void removeNode(Node node);
-    bool hasEdge(Node node1, Node node2);
     void clearGraph();
 
     void stopRunning();

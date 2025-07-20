@@ -27,6 +27,7 @@ public:
 
     void addNeighbor(int nodeID);
     void removeNeighbor(int nodeID);
+    void removeNeighbors();
     void changeNodeStatus();
     void drawNode() const;
 };

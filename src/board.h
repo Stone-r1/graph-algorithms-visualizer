@@ -35,8 +35,7 @@ public:
     void addNode(Vector2 mousePosition);
     void addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
     void removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
-    void removeNode(Node node);
-    bool hasEdge(Node node1, Node node2);
+    void removeNode(Vector2 mousePosition);
     void clearGraph();
 
     void stopRunning();

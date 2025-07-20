@@ -54,6 +54,10 @@ void Node::removeNeighbor(int nodeID) {
     neighbors.erase(nodeID);
 }
 
+void Node::removeNeighbors() {
+    neighbors.clear();
+}
+
 void Node::changeNodeStatus() {
     isActive = !isActive;
 }
