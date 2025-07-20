@@ -7,8 +7,6 @@
 using std::vector;
 
 #define MAX_NODES 1000
-#define RADIUS 50
-
 
 Board::Board() :
     edges(0),
@@ -40,7 +38,22 @@ NodePair Board::findNodesFromPositions(Vector2 firstNodePosition, Vector2 second
 }
 
 void Board::addNode(Vector2 mousePosition) {
-    Node currentNode = Node(lastNodeIndex, mousePosition, RADIUS);
+    for (const Node& node : nodes) {
+        float minDistance = node.getNodeRadius() * 3;
+
+        if (node.isNodeValid()) {
+            Vector2 nodePosition = node.getNodePosition(); 
+
+            float dx = mousePosition.x - nodePosition.x;
+            float dy = mousePosition.y - nodePosition.y;
+
+            if (dx * dx + dy * dy <= minDistance * minDistance) {
+                return;
+            }
+        }
+    }
+
+    Node currentNode = Node(lastNodeIndex, mousePosition, 50.0f);
     nodes[lastNodeIndex++] = currentNode;
 }
 
@@ -108,18 +121,11 @@ void Board::removeNode(Vector2 mousePosition) {
     *nodeToRemove = Node(-1, {0.0f, 0.0f}, 0.0f);
 }
 
-/*
-    Board();
+void Board::draw() {
+    for (const Node& node : nodes) {
+        if (!node.isNodeValid()) continue;
 
-    int getEdges() const;
-
-    void clearGraph();
-
-    void stopRunning();
-    void resetRunning();
-
-    void draw();
-    void drawTraversal();
-};
-*/
-
+        Vector2 nodePosition = node.getNodePosition();
+        DrawCircle(nodePosition.x, nodePosition.y, node.getNodeRadius(), RED);
+    }  
+}

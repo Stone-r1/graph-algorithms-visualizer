@@ -2,7 +2,7 @@
 #include "node.h"
 
 
-Node::Node(int index, Vector2 position, float radius) :
+Node::Node(int index, Vector2 position, float radius = 50.0f) :
     nodeIndex(index),
     nodePosition(position),
     nodeRadius(radius),
