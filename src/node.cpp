@@ -1,9 +1,10 @@
 #include "raylib.h"
 #include "node.h"
 
-Node::Node(int index, Vector2 position) {
+Node::Node(int index, Vector2 position, float radius) {
     nodeIndex = index;
     nodePosition = position;
+    nodeRadius = radius;
     isActive = false;
 }
 
@@ -23,15 +24,12 @@ bool Node::isNodeActive() const {
     return isActive;
 }
 
-bool isInRadiusDomain(const Node& node, Vector2 position) {
-    Vector2 nodePosition = node.getNodePosition();
-    float nodeRadius = node.getNodeRadius();
-
+bool Node::isInRadiusDomain(Vector2 position) const {
     float dx = position.x - nodePosition.x;
     float dy = position.y - nodePosition.y;
-    return dx * dx - dy * dy <= nodeRadius * nodeRadius; 
+    return dx * dx + dy * dy <= nodeRadius * nodeRadius; 
 }
 
-void drawNode(const Node& node, Vector2 position) {
-    DrawCircle(position.x, position.y, node.getNodeRadius(), RED);
+void Node::drawNode() const {
+    DrawCircle(nodePosition.x, nodePosition.y, nodeRadius, RED);
 }

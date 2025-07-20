@@ -11,15 +11,15 @@ private:
     bool isActive;
 
 public:
-    Node(int index, Vector2 position);
+    Node(int index, Vector2 position, float radius);
     
     int getNodeIndex() const;
     Vector2 getNodePosition() const;
     float getNodeRadius() const;
     bool isNodeActive() const;
 
-    int isInRadiusDomain(const Node& node, Vector2 mousePosition);
-    void drawNode(const Node& node, Vector2 mousePosition);
+    bool isInRadiusDomain(Vector2 mousePosition) const;
+    void drawNode() const;
 };
 
 #endif
