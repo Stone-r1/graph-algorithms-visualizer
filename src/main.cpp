@@ -8,6 +8,7 @@
 #define LARGE 70.0f
 
 float radius = MEDIUM;
+Vector2 startNode;
 
 void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) { 
@@ -20,7 +21,12 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
             if (sidebar.isButtonClicked("Medium")) radius = MEDIUM; 
             if (sidebar.isButtonClicked("Large")) radius = LARGE;
             
-
+            if (sidebar.isButtonClicked("BFS")) {
+                board.runBFS(startNode);
+            }
+            if (sidebar.isButtonClicked("DFS")) {
+                board.runDFS(startNode);
+            }
             sidebar.resetClicks();
         }
     }
@@ -37,6 +43,7 @@ void handleRightClick(Board& board, Sidebar& sidebar, Vector2 mouse, Vector2& se
             } else if (selectedNode.x == nodePosition.x && selectedNode.y == nodePosition.y) {
                 // so basically If you clicked on the same node twice
                 std::cout << "Selected the starting node.\n";
+                startNode = selectedNode;
                 selectedNode = {-1, -1};
             } else {
                 std::cout << "Added the edge between Node 1 and Node2\n";
@@ -61,6 +68,18 @@ int main() {
         Vector2 mouse = GetMousePosition();
         handleLeftClick(board, sidebar, mouse);
         handleRightClick(board, sidebar, mouse, selectedNode);
+
+        if (IsKeyPressed(KEY_RIGHT)) {
+            board.stepForward();
+        }
+
+        if (IsKeyPressed(KEY_LEFT)) {
+            board.stepBackward();
+        }
+
+        if (IsKeyPressed(KEY_R)) {
+            board.resetRunning();
+        }
 
         BeginDrawing();
             ClearBackground(WHITE);
