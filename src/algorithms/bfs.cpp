@@ -1,8 +1,6 @@
 #include "bfs.h"
-#include <vector>
-#include <queue>
 
-BFS::BFS(const std::vector<std::vector<int>>& adj, int startNode) : 
+BFS::BFS(const vector<vector<int>>& adj, int startNode) : 
     graph(adj),
     visited(adj.size(), false),
     finished(false)
@@ -11,13 +9,21 @@ BFS::BFS(const std::vector<std::vector<int>>& adj, int startNode) :
     visited[startNode] = true;
 }
 
-std::pair<int, int> BFS::step() {
+pair<int, int> BFS::stepForward() {
+    if (finished) {
+        return {-1, -1};
+    } 
+    
+    if (currentStepIndex + 1 < history.size()) {
+        return history[++currentStepIndex];
+    }
+
     if (q.empty()) {
         finished = true;
         return {-1, -1};
     }
 
-    auto [from, node] = q.front();
+    auto [parent, node] = q.front();
     q.pop();
 
     for (int neighbor : graph[node]) {
@@ -26,10 +32,33 @@ std::pair<int, int> BFS::step() {
             q.push({node, neighbor});
         }
     }
+    
+    currentStepIndex++;
+    history.push_back({parent, node});
+    return {parent, node};
+}
 
-    return {from, node};
+pair<int, int> BFS::stepBackward() {
+    if (currentStepIndex < 0) {
+        return {-1, -1};
+    }
+    
+    return history[currentStepIndex--]; 
 }
 
 bool BFS::isFinished() const {
-    return finished;
+    return finished && currentStepIndex + 1 >= history.size();
+}
+
+
+int BFS::getCurrentStepIndex() const {
+    return currentStepIndex;
+}
+
+int BFS::getTotalSteps() const {
+    return history.size();
+}
+
+pair<int, int> BFS::getHistory(int index) const {
+    return history[index];
 }

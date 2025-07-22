@@ -179,10 +179,22 @@ void Board::resetHighlights() {
     highlightedEdges.clear();
 }
 
-void Board::stepBFS() {
+void Board::stepForwardBFS() {
     if (bfs && !bfs->isFinished()) {
-        auto [from, to] = bfs->step();
+        auto [from, to] = bfs->stepForward();
         if (from != -1) {
+            highlightEdge(from, to);
+            highlightNode(to);
+        }
+    }
+}
+
+void Board::stepBackwardBFS() {
+    if (bfs && bfs->getCurrentStepIndex() >= 0) {
+        auto [parent, node] = bfs->stepBackward();
+        resetHighlights();
+        for (int i = 0; i <= bfs->getCurrentStepIndex(); i++) {
+            auto [from, to] = bfs->getHistory(i);
             highlightEdge(from, to);
             highlightNode(to);
         }

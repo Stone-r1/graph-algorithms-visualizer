@@ -41,7 +41,8 @@ public:
 
     // ==== algorithms ====
     void runBFS(Vector2 startNodePosition);
-    void stepBFS();
+    void stepForwardBFS();
+    void stepBackwardBFS();
     // ====================
     
     // ==== highlights ====
