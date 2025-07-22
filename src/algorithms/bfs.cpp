@@ -4,7 +4,8 @@
 
 BFS::BFS(const std::vector<std::vector<int>>& adj, int startNode) : 
     graph(adj),
-    visited(adj.size(), false)
+    visited(adj.size(), false),
+    finished(false)
 {
     q.push({startNode, startNode});
     visited[startNode] = true;
