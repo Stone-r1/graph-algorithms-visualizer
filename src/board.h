@@ -7,6 +7,7 @@
 #include "raylib.h"
 #include "node.h"
 #include "algorithms/bfs.h"
+#include "algorithms/dfs.h"
 using std::vector;
 
 
@@ -24,7 +25,7 @@ private:
     vector<int> traversalOrder;
     std::set<std::pair<int, int>> highlightedEdges;
 
-    std::unique_ptr<BFS> bfs;
+    std::unique_ptr<TraversalAlgorithm> currentAlgo;
 
     Node* findNodeFromPosition(Vector2 firstNodePosition);
 
@@ -41,8 +42,10 @@ public:
 
     // ==== algorithms ====
     void runBFS(Vector2 startNodePosition);
-    void stepForwardBFS();
-    void stepBackwardBFS();
+    void runDFS(Vector2 startNodePosition);
+
+    void stepForward();
+    void stepBackward();
     // ====================
     
     // ==== highlights ====

@@ -11,6 +11,7 @@ set(SOURCES
     src/node.cpp
     src/sidebar.cpp
     src/algorithms/bfs.cpp
+    src/algorithms/dfs.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

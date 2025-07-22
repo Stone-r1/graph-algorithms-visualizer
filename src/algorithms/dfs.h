@@ -1,24 +1,24 @@
-#ifndef BFS_H
-#define BFS_H
+#ifndef DFS_H
+#define DFS_H
 
 #include "traversalAlgorithm.h"
 #include <vector>
-#include <queue>
+#include <stack>
 
 using std::vector;
 using std::pair;
 
-class BFS : public TraversalAlgorithm {
+class DFS : public TraversalAlgorithm {
 private:
     const vector<vector<int>>& graph;
-    std::queue<pair<int, int>> q;
+    std::stack<pair<int, int>> st;
     vector<bool> visited;
     bool finished;
     int currentStepIndex = -1;
     vector<pair<int, int>> history;
 
 public:
-    BFS(const vector<vector<int>>& adj, int startNode);
+    DFS(const vector<vector<int>>& adj, int startNode);
 
     pair<int, int> stepForward();
     pair<int, int> stepBackward();

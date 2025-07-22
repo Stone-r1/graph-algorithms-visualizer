@@ -5,7 +5,6 @@
 #include "raylib.h"
 #include "board.h"
 #include "node.h"
-#include "algorithms/bfs.h"
 
 #define MAX_NODES 1000
 
@@ -147,14 +146,21 @@ void Board::drawEdges() {
 }
 
 void Board::resetRunning() {
-    bfs.reset();
+    currentAlgo.reset();
     resetHighlights();
 }
 
 void Board::runBFS(Vector2 startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
-        bfs = std::make_unique<BFS>(graph, startNode->getNodeIndex());
+        currentAlgo = std::make_unique<BFS>(graph, startNode->getNodeIndex());
+    }
+}
+
+void Board::runDFS(Vector2 startNodePosition) {
+    Node* startNode = findNodeFromPosition(startNodePosition);
+    if (startNode) {
+        currentAlgo = std::make_unique<DFS>(graph, startNode->getNodeIndex());
     }
 }
 
@@ -179,9 +185,9 @@ void Board::resetHighlights() {
     highlightedEdges.clear();
 }
 
-void Board::stepForwardBFS() {
-    if (bfs && !bfs->isFinished()) {
-        auto [from, to] = bfs->stepForward();
+void Board::stepForward() {
+    if (currentAlgo && !currentAlgo->isFinished()) {
+        auto [from, to] = currentAlgo->stepForward();
         if (from != -1) {
             highlightEdge(from, to);
             highlightNode(to);
@@ -189,12 +195,12 @@ void Board::stepForwardBFS() {
     }
 }
 
-void Board::stepBackwardBFS() {
-    if (bfs && bfs->getCurrentStepIndex() >= 0) {
-        auto [parent, node] = bfs->stepBackward();
+void Board::stepBackward() {
+    if (currentAlgo && currentAlgo->getCurrentStepIndex() >= 0) {
+        auto [parent, node] = currentAlgo->stepBackward();
         resetHighlights();
-        for (int i = 0; i <= bfs->getCurrentStepIndex(); i++) {
-            auto [from, to] = bfs->getHistory(i);
+        for (int i = 0; i <= currentAlgo->getCurrentStepIndex(); i++) {
+            auto [from, to] = currentAlgo->getHistory(i);
             highlightEdge(from, to);
             highlightNode(to);
         }
