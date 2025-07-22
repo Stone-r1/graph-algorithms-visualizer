@@ -9,10 +9,10 @@
 struct Button {
     Rectangle domain;
     std::string label;
-    bool clicked;
+    bool isClicked;
 
     Button(Rectangle rect, const std::string& str)
-        : domain(rect), label(str), clicked(false) {}
+        : domain(rect), label(str), isClicked(false) {}
 };
 
 
@@ -23,6 +23,7 @@ private:
     int height;
 
     std::vector<Button> buttons;
+    std::vector<Button> radiuses;
 
 public:
     Sidebar(int screenHeight); 
@@ -32,7 +33,7 @@ public:
     bool isInSidebarDomain(Vector2 mousePosition, float currentRadius);
 
     bool isButtonClicked(const std::string& label);
-    void resetClick();
+    void resetClicks();
 };
 
 #endif
