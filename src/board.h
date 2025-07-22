@@ -1,15 +1,13 @@
 #include <vector>
 #include <queue>
+#include <set>
 #include <unordered_map>
+#include <memory>
+
 #include "raylib.h"
 #include "node.h"
+#include "algorithms/bfs.h"
 using std::vector;
-
-
-struct NodePair {
-    Node* firstNode = nullptr;
-    Node* secondNode = nullptr;
-};
 
 
 class Board {
@@ -22,11 +20,13 @@ private:
     Node lastClickedNode;
 
     vector<vector<int>> graph;
-    vector<bool> visited;
     vector<Node> nodes;
     vector<int> traversalOrder;
+    std::set<std::pair<int, int>> highlightedEdges;
 
-    NodePair findNodesFromPositions(Vector2 firstNodePosition, Vector2 secondNodePosition);
+    std::unique_ptr<BFS> bfs;
+
+    Node* findNodeFromPosition(Vector2 firstNodePosition);
 
 public:
     Board();
@@ -38,6 +38,17 @@ public:
     void removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
     void removeNode(Vector2 mousePosition);
     void clearGraph();
+
+    // ==== algorithms ====
+    void runBFS(Vector2 startNodePosition);
+    void stepBFS();
+    // ====================
+    
+    // ==== highlights ====
+    void highlightNode(int index);
+    void highlightEdge(int from, int to);
+    void resetHighlights();
+    // ====================
 
     void stopRunning();
     void resetRunning();
