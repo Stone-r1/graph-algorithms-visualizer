@@ -1,6 +1,9 @@
 #include "board.h"
 #include <iostream>
 #include "raylib.h"
+#include "sidebar.h"
+
+const float radius = 50.0f;
 
 int main() {
     int monitor = GetCurrentMonitor();
@@ -9,12 +12,16 @@ int main() {
     SetTargetFPS(60);
 
     Board board;
+    Sidebar sidebar(GetScreenHeight());
     Vector2 selectedNode = {-1, -1};
 
     while (!WindowShouldClose()) { 
         Vector2 mouse = GetMousePosition();
         if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            board.addNode(mouse);
+            sidebar.handleMouse(mouse);
+            if (!sidebar.isInSidebarDomain(mouse, radius)) {
+                board.addNode(mouse, radius);
+            }
         }
 
         if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
@@ -34,6 +41,7 @@ int main() {
 
         BeginDrawing();
             ClearBackground(WHITE);
+            sidebar.draw();
             board.drawNodes();
             board.drawEdges();
 
@@ -42,3 +50,4 @@ int main() {
 
     CloseWindow();
 }
+

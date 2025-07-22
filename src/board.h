@@ -33,7 +33,7 @@ public:
 
     Vector2 isInNodeDomain(Vector2 mousePosition);
 
-    void addNode(Vector2 mousePosition);
+    void addNode(Vector2 mousePosition, float currentRadius);
     void addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
     void removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
     void removeNode(Vector2 mousePosition);

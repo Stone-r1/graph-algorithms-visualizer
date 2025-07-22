@@ -25,14 +25,11 @@ private:
     std::vector<Button> buttons;
 
 public:
-    Sidebar(int screenHeight);
-    
-    int getSidebarX() const;
-    int getSidebarWidth() const;
-    int getSidebarHeight() const;
+    Sidebar(int screenHeight); 
 
     void draw();
     void handleMouse(Vector2 mousePosition);
+    bool isInSidebarDomain(Vector2 mousePosition, float currentRadius);
 
     bool isButtonClicked(const std::string& label);
     void resetClick();

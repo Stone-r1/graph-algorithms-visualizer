@@ -49,7 +49,7 @@ Vector2 Board::isInNodeDomain(Vector2 mousePosition) {
     return {0.0f, 0.0f};
 }
 
-void Board::addNode(Vector2 mousePosition) {
+void Board::addNode(Vector2 mousePosition, float currentRadius) {
     for (const Node& node : nodes) {
         float minDistance = node.getNodeRadius() * 3;
 
@@ -65,7 +65,7 @@ void Board::addNode(Vector2 mousePosition) {
         }
     }
 
-    Node currentNode = Node(lastNodeIndex, mousePosition, 50.0f);
+    Node currentNode = Node(lastNodeIndex, mousePosition, currentRadius);
     nodes[lastNodeIndex++] = currentNode;
 }
 
