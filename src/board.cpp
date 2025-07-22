@@ -1,12 +1,11 @@
 #include <vector>
-#include <queue>
 #include <set>
 #include <algorithm>
 
 #include "raylib.h"
 #include "board.h"
 #include "node.h"
-using std::vector;
+#include "algorithms/bfs.h"
 
 #define MAX_NODES 1000
 
@@ -18,25 +17,17 @@ Board::Board() :
     isRunning(false),
     lastClickedNode(-1, {0, 0}, 0),
     graph(MAX_NODES),
-    visited(MAX_NODES, false),
     nodes(MAX_NODES, Node(-1, {0, 0}, 0)),
     traversalOrder(MAX_NODES)
 {}
 
-NodePair Board::findNodesFromPositions(Vector2 firstNodePosition, Vector2 secondNodePosition) {
-    NodePair pair; 
-
+Node* Board::findNodeFromPosition(Vector2 firstNodePosition) {
     for (Node& node : nodes) {
         if (node.isNodeValid() && node.isInRadiusDomain(firstNodePosition)) {
-            pair.firstNode = &node;
-        }
-
-        if (node.isNodeValid() && node.isInRadiusDomain(secondNodePosition)) {
-            pair.secondNode = &node;
+            return &node;
         }
     }
-
-    return pair;
+    return nullptr;
 }
 
 Vector2 Board::isInNodeDomain(Vector2 mousePosition) {
@@ -70,52 +61,49 @@ void Board::addNode(Vector2 mousePosition, float currentRadius) {
 }
 
 void Board::addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
-    NodePair found = findNodesFromPositions(firstNodePosition, secondNodePosition);
-    if (!found.firstNode || !found.secondNode) {
+    Node* firstNode = findNodeFromPosition(firstNodePosition);
+    Node* secondNode = findNodeFromPosition(secondNodePosition);
+
+    if (!firstNode || !secondNode) {
         return;
     }
 
-    int firstNodeIndex = found.firstNode->getNodeIndex();
-    int secondNodeIndex = found.secondNode->getNodeIndex();
+    int firstNodeIndex = firstNode->getNodeIndex();
+    int secondNodeIndex = secondNode->getNodeIndex();
 
     graph[firstNodeIndex].push_back(secondNodeIndex); 
-    found.firstNode->addNeighbor(secondNodeIndex);
+    firstNode->addNeighbor(secondNodeIndex);
 
     if (!isDirected) {
         graph[secondNodeIndex].push_back(firstNodeIndex);
-        found.secondNode->addNeighbor(firstNodeIndex);
+        secondNode->addNeighbor(firstNodeIndex);
     }
 }
 
 void Board::removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
-    NodePair found = findNodesFromPositions(firstNodePosition, secondNodePosition);
-    if (!found.firstNode || !found.secondNode) {
+    Node* firstNode = findNodeFromPosition(firstNodePosition);
+    Node* secondNode = findNodeFromPosition(secondNodePosition);
+
+    if (!firstNode || !secondNode) {
         return;
     }
 
-    int firstNodeIndex = found.firstNode->getNodeIndex();
-    int secondNodeIndex = found.secondNode->getNodeIndex();
+    int firstNodeIndex = firstNode->getNodeIndex();
+    int secondNodeIndex = secondNode->getNodeIndex();
 
     auto& neighbors1 = graph[firstNodeIndex];
     neighbors1.erase(std::remove(neighbors1.begin(), neighbors1.end(), secondNodeIndex), neighbors1.end());
-    found.firstNode->removeNeighbor(secondNodeIndex);
+    firstNode->removeNeighbor(secondNodeIndex);
    
     if (!isDirected) {
         auto& neighbors2 = graph[secondNodeIndex];
         neighbors2.erase(std::remove(neighbors2.begin(), neighbors2.end(), firstNodeIndex), neighbors2.end());
-        found.secondNode->removeNeighbor(firstNodeIndex);
+        secondNode->removeNeighbor(firstNodeIndex);
     }
 }
 
 void Board::removeNode(Vector2 mousePosition) {
-    Node* nodeToRemove = nullptr;
-    for (int i = 0; i < lastNodeIndex; i++) {
-        if (nodes[i].isNodeValid() && nodes[i].isInRadiusDomain(mousePosition)) {
-            nodeToRemove = &nodes[i];
-            break;
-        }
-    }
-
+    Node* nodeToRemove = findNodeFromPosition(mousePosition);
     if (!nodeToRemove) return;
 
     graph[nodeToRemove->getNodeIndex()].clear();
@@ -138,7 +126,8 @@ void Board::drawNodes() {
         if (!node.isNodeValid()) continue;
 
         Vector2 nodePosition = node.getNodePosition();
-        DrawCircle(nodePosition.x, nodePosition.y, node.getNodeRadius(), RED);
+        Color color = node.highlighted() ? RED : BLUE;
+        DrawCircle(nodePosition.x, nodePosition.y, node.getNodeRadius(), color);
     }  
 }
 
@@ -149,7 +138,53 @@ void Board::drawEdges() {
         std::set<int> neighbors = node.getNodeNeighbors();
         for (auto it = neighbors.begin(); it != neighbors.end(); it++) {
             Node* neighbor = &nodes[*it];
-            DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 5.0f, GREEN);
+            if (!neighbor->isNodeValid()) continue;
+
+            Color color = highlightedEdges.count({node.getNodeIndex(), neighbor->getNodeIndex()}) ? DARKBLUE : GREEN;
+            DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 5.0f, color);
         }
     }         
+}
+
+void Board::resetRunning() {
+    bfs.reset();
+    resetHighlights();
+}
+
+void Board::runBFS(Vector2 startNodePosition) {
+    Node* startNode = findNodeFromPosition(startNodePosition);
+    if (startNode) {
+        bfs = std::make_unique<BFS>(graph, startNode->getNodeIndex());
+    }
+}
+
+void Board::highlightNode(int index) {
+    if (index >= 0 && index < nodes.size() && nodes[index].isNodeValid()) {
+        nodes[index].setHighlight();
+    }
+}
+
+void Board::highlightEdge(int from, int to) {
+      highlightedEdges.insert({from, to});
+      if (!isDirected && from != to) {
+          highlightedEdges.insert({to, from});
+      }
+}
+
+void Board::resetHighlights() {
+    for (Node& node : nodes) {
+        node.resetHighlight();
+    }
+
+    highlightedEdges.clear();
+}
+
+void Board::stepBFS() {
+    if (bfs && !bfs->isFinished()) {
+        auto [from, to] = bfs->step();
+        if (from != -1) {
+            highlightEdge(from, to);
+            highlightNode(to);
+        }
+    }
 }
