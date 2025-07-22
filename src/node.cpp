@@ -69,3 +69,15 @@ void Node::changeNodeStatus() {
 void Node::drawNode() const {
     DrawCircle(nodePosition.x, nodePosition.y, nodeRadius, RED);
 }
+
+void Node::setHighlight() {
+    isHighlighted = true;
+}
+
+void Node::resetHighlight() {
+    isHighlighted = false;
+}
+
+bool Node::highlighted() const {
+    return isHighlighted;
+}

@@ -12,6 +12,8 @@ private:
     bool isActive;
     std::set<int> neighbors;
 
+    bool isHighlighted = false;
+
 public:
     Node(int index, Vector2 position, float radius);
     Node();
@@ -31,6 +33,10 @@ public:
     void removeNeighbors();
     void changeNodeStatus();
     void drawNode() const;
+
+    void setHighlight(); 
+    void resetHighlight(); 
+    bool highlighted() const;
 };
 
 #endif
