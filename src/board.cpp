@@ -72,11 +72,11 @@ void Board::addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition, int w
     int firstNodeIndex = firstNode->getNodeIndex();
     int secondNodeIndex = secondNode->getNodeIndex();
 
-    graph[firstNodeIndex].push_back(secondNodeIndex); 
+    graph[firstNodeIndex].push_back({secondNodeIndex, weight}); 
     firstNode->addNeighbor(secondNodeIndex);
 
     if (!isDirected) {
-        graph[secondNodeIndex].push_back(firstNodeIndex);
+        graph[secondNodeIndex].push_back({firstNodeIndex, weight});
         secondNode->addNeighbor(firstNodeIndex);
         edges++;
     }
@@ -95,12 +95,16 @@ void Board::removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
     int secondNodeIndex = secondNode->getNodeIndex();
 
     auto& neighbors1 = graph[firstNodeIndex];
-    neighbors1.erase(std::remove(neighbors1.begin(), neighbors1.end(), secondNodeIndex), neighbors1.end());
+    neighbors1.erase(std::remove_if(neighbors1.begin(), neighbors1.end(), 
+                [secondNodeIndex](const pair<int, int>& p) {return p.first == secondNodeIndex;
+                }), neighbors1.end());
     firstNode->removeNeighbor(secondNodeIndex);
    
     if (!isDirected) {
         auto& neighbors2 = graph[secondNodeIndex];
-        neighbors2.erase(std::remove(neighbors2.begin(), neighbors2.end(), firstNodeIndex), neighbors2.end());
+        neighbors2.erase(std::remove_if(neighbors2.begin(), neighbors2.end(),
+                    [firstNodeIndex](const pair<int, int>& p) {return p.first == firstNodeIndex;
+                    }), neighbors2.end());
         secondNode->removeNeighbor(firstNodeIndex);
         edges--;
     }
@@ -117,7 +121,9 @@ void Board::removeNode(Vector2 mousePosition) {
         if (i == nodeToRemove->getNodeIndex()) continue;
 
         auto& adj = graph[i];
-        adj.erase(std::remove(adj.begin(), adj.end(), nodeToRemove->getNodeIndex()), adj.end());
+        adj.erase(std::remove_if(adj.begin(), adj.end(),
+                    [nodeToRemove](const pair<int, int>& p) {return p.first == nodeToRemove->getNodeIndex();
+                    }), adj.end());
         nodes[i].removeNeighbor(nodeToRemove->getNodeIndex());
     }
 

@@ -1,6 +1,6 @@
 #include "dfs.h"
 
-DFS::DFS(const vector<vector<int>>& adj, int startNode) : 
+DFS::DFS(const vector<vector<pair<int, int>>>& adj, int startNode) : 
     graph(adj),
     visited(adj.size(), false),
     finished(false)
@@ -28,8 +28,8 @@ pair<int, int> DFS::stepForward() {
     st.pop();
 
     for (auto it = graph[node].rbegin(); it != graph[node].rend(); it++) {
-        if (!visited[*it]) {
-            st.push({node, *it});
+        if (!visited[(*it).first]) {
+            st.push({node, (*it).first});
         }
     }
     

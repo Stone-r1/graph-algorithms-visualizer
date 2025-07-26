@@ -10,7 +10,7 @@ using std::pair;
 
 class DFS : public TraversalAlgorithm {
 private:
-    const vector<vector<int>>& graph;
+    const vector<vector<pair<int, int>>>& graph;
     std::stack<pair<int, int>> st;
     vector<bool> visited;
     bool finished;
@@ -18,7 +18,7 @@ private:
     vector<pair<int, int>> history;
 
 public:
-    DFS(const vector<vector<int>>& adj, int startNode);
+    DFS(const vector<vector<pair<int, int>>>& adj, int startNode);
 
     pair<int, int> stepForward();
     pair<int, int> stepBackward();

@@ -26,7 +26,7 @@ private:
     int weightDigitCount = 0;
     bool weightReady = false;
 
-    vector<vector<int>> graph;
+    vector<vector<pair<int, int>>> graph;
     vector<Node> nodes;
     std::set<pair<int, int>> highlightedEdges;
 

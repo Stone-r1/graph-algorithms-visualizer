@@ -1,6 +1,6 @@
 #include "bfs.h"
 
-BFS::BFS(const vector<vector<int>>& adj, int startNode) : 
+BFS::BFS(const vector<vector<pair<int, int>>>& adj, int startNode) : 
     graph(adj),
     visited(adj.size(), false),
     finished(false)
@@ -26,7 +26,7 @@ pair<int, int> BFS::stepForward() {
     auto [parent, node] = q.front();
     q.pop();
 
-    for (int neighbor : graph[node]) {
+    for (auto& [neighbor, weight] : graph[node]) {
         if (!visited[neighbor]) {
             visited[neighbor] = true;
             q.push({node, neighbor});
