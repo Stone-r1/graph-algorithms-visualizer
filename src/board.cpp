@@ -159,19 +159,30 @@ void Board::drawEdges() {
 void Board::resetRunning() {
     currentAlgo.reset();
     resetHighlights();
+ 
+    currentStep = 0;
+    weightDigitCount = 0;
+    isRunning = false;
+    weightReady = false;
+    isEnteringWeight = false;
+    std::fill(std::begin(weightInput), std::end(weightInput), '\0');
 }
 
 void Board::runBFS(Vector2 startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
+        resetRunning();
         currentAlgo = std::make_unique<BFS>(graph, startNode->getNodeIndex());
+        isRunning = true;
     }
 }
 
 void Board::runDFS(Vector2 startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
+        resetRunning();
         currentAlgo = std::make_unique<DFS>(graph, startNode->getNodeIndex());
+        isRunning = true;
     }
 }
 

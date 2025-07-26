@@ -26,16 +26,36 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
     } else {
         sidebar.handleMouse(mouse);
 
-        if (sidebar.isButtonClicked("Small")) radius = SMALL;
-        if (sidebar.isButtonClicked("Medium")) radius = MEDIUM; 
-        if (sidebar.isButtonClicked("Large")) radius = LARGE;
+        if (sidebar.isButtonClicked("Small")) {
+            radius = SMALL;
+            sidebar.resetClicks();
+            return;
+        }
+
+        if (sidebar.isButtonClicked("Medium")) {
+            radius = MEDIUM; 
+            sidebar.resetClicks();
+            return;
+        }
+
+        if (sidebar.isButtonClicked("Large")) {
+            radius = LARGE;
+            sidebar.resetClicks();
+            return;
+        }
         
         if (sidebar.isButtonClicked("BFS")) {
             board.runBFS(startNode);
+            sidebar.resetClicks();
+            return;
         }
+
         if (sidebar.isButtonClicked("DFS")) {
             board.runDFS(startNode);
+            sidebar.resetClicks();
+            return;
         }
+
         if (sidebar.isButtonClicked("Weighted")) {
             if (!board.isGraphEmpty()) {
                 return; // can't flip the graph weight if edges were added.
@@ -43,8 +63,10 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
                 board.flipGraphWeight();
                 std::cout << "karoche graph weight is now set to " << (board.isGraphWeighted() ? "true\n" : "false\n");
             }
+
+            sidebar.resetClicks();
+            return;
         }
-        sidebar.resetClicks();
     } 
 }
 

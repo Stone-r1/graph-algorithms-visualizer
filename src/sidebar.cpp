@@ -88,7 +88,7 @@ bool Sidebar::isInSidebarDomain(Vector2 mousePosition, float currentRadius) {
 
 bool Sidebar::isButtonClicked(const std::string& label) {
     for (const auto& button : buttons) {
-        if (button.label == label) {
+        if (button.label == label && button.isClicked) {
             return true;
         }
     }
