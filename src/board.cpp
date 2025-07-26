@@ -228,6 +228,8 @@ void Board::flipGraphWeight() {
 
 void Board::askForWeight() {
     Rectangle box = {300, 200, 200, 50};
+    Color color = {254, 248, 221, 255};
+    DrawRectangleRec(box, color);
     DrawRectangleLinesEx(box, 2, BLACK);
     DrawText(weightInput, box.x + 10, box.y + 15, 30, DARKGRAY);
     int key = GetCharPressed();
