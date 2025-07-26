@@ -1,6 +1,7 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <ctype.h>
 
 #include "raylib.h"
 #include "board.h"
@@ -13,11 +14,11 @@ Board::Board() :
     lastNodeIndex(0),
     currentStep(0),
     isDirected(false),
+    isWeighted(false),
     isRunning(false),
     lastClickedNode(-1, {0, 0}, 0),
     graph(MAX_NODES),
-    nodes(MAX_NODES, Node(-1, {0, 0}, 0)),
-    traversalOrder(MAX_NODES)
+    nodes(MAX_NODES, Node(-1, {0, 0}, 0))
 {}
 
 Node* Board::findNodeFromPosition(Vector2 firstNodePosition) {
@@ -59,7 +60,7 @@ void Board::addNode(Vector2 mousePosition, float currentRadius) {
     nodes[lastNodeIndex++] = currentNode;
 }
 
-void Board::addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
+void Board::addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition, int weight) {
     Node* firstNode = findNodeFromPosition(firstNodePosition);
     Node* secondNode = findNodeFromPosition(secondNodePosition);
 
@@ -67,6 +68,7 @@ void Board::addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
         return;
     }
 
+    edges++;
     int firstNodeIndex = firstNode->getNodeIndex();
     int secondNodeIndex = secondNode->getNodeIndex();
 
@@ -76,6 +78,7 @@ void Board::addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
     if (!isDirected) {
         graph[secondNodeIndex].push_back(firstNodeIndex);
         secondNode->addNeighbor(firstNodeIndex);
+        edges++;
     }
 }
 
@@ -87,6 +90,7 @@ void Board::removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
         return;
     }
 
+    edges--;
     int firstNodeIndex = firstNode->getNodeIndex();
     int secondNodeIndex = secondNode->getNodeIndex();
 
@@ -98,6 +102,7 @@ void Board::removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
         auto& neighbors2 = graph[secondNodeIndex];
         neighbors2.erase(std::remove(neighbors2.begin(), neighbors2.end(), firstNodeIndex), neighbors2.end());
         secondNode->removeNeighbor(firstNodeIndex);
+        edges--;
     }
 }
 
@@ -205,4 +210,59 @@ void Board::stepBackward() {
             highlightNode(to);
         }
     }
+}
+
+// related to graph weights
+
+bool Board::isGraphWeighted() const {
+    return isWeighted;
+}
+
+bool Board::isGraphEmpty() const {
+    return edges == 0;
+}
+
+void Board::flipGraphWeight() {
+    isWeighted = !isWeighted;
+}
+
+void Board::askForWeight() {
+    Rectangle box = {300, 200, 200, 50};
+    DrawRectangleLinesEx(box, 2, BLACK);
+    DrawText(weightInput, box.x + 10, box.y + 15, 30, DARKGRAY);
+    int key = GetCharPressed();
+
+    while (key > 0) {
+        if (isdigit(key) && weightDigitCount < 9) {
+            weightInput[weightDigitCount++] = (char)key;
+            weightInput[weightDigitCount] = '\0';
+        }
+
+        key = GetCharPressed();
+    }
+ 
+    if (IsKeyPressed(KEY_BACKSPACE) && weightDigitCount > 0) {
+        weightInput[--weightDigitCount] = '\0';
+    }
+
+    if (IsKeyPressed(KEY_ENTER)) {
+        weightReady = true;
+        isEnteringWeight = true;
+    }
+}
+
+int Board::getCurrentWeight() {
+    int result = atoi(weightInput);
+    weightInput[0] = '\0';
+    weightDigitCount = 0;
+    weightReady = true;
+    return result;
+}
+
+bool Board::isWeightReady() const {
+    return weightReady;
+}
+
+void Board::setWeightReady() {
+    weightReady = !weightReady;
 }

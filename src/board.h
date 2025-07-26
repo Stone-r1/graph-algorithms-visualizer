@@ -17,13 +17,18 @@ private:
     int lastNodeIndex;
     int currentStep;
     bool isDirected;
+    bool isWeighted;
     bool isRunning;
     Node lastClickedNode;
 
+    bool isEnteringWeight = false;
+    char weightInput[10] = "";
+    int weightDigitCount = 0;
+    bool weightReady = false;
+
     vector<vector<int>> graph;
     vector<Node> nodes;
-    vector<int> traversalOrder;
-    std::set<std::pair<int, int>> highlightedEdges;
+    std::set<pair<int, int>> highlightedEdges;
 
     std::unique_ptr<TraversalAlgorithm> currentAlgo;
 
@@ -35,7 +40,7 @@ public:
     Vector2 isInNodeDomain(Vector2 mousePosition);
 
     void addNode(Vector2 mousePosition, float currentRadius);
-    void addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
+    void addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition, int weight = 1);
     void removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
     void removeNode(Vector2 mousePosition);
     void clearGraph();
@@ -59,5 +64,13 @@ public:
 
     void drawNodes();
     void drawEdges();
-    void drawTraversal();
+
+    bool isGraphEmpty() const;
+    bool isGraphWeighted() const;
+ 
+    void flipGraphWeight();
+    void askForWeight();
+    int getCurrentWeight();
+    void setWeightReady();
+    bool isWeightReady() const;
 };
