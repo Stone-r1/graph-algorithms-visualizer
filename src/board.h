@@ -15,6 +15,7 @@ class Board {
 private:
     int edges;
     int lastNodeIndex;
+    int startNodeIndex = -1;
     int currentStep;
     bool isDirected;
     bool isWeighted;
@@ -56,6 +57,7 @@ public:
     // ==== highlights ====
     void highlightNode(int index);
     void highlightEdge(int from, int to);
+    void highlightStartingNode(Vector2 mousePosition);
     void resetHighlights();
     // ====================
 

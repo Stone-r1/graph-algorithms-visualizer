@@ -3,7 +3,8 @@
 DFS::DFS(const vector<vector<pair<int, int>>>& adj, int startNode) : 
     graph(adj),
     visited(adj.size(), false),
-    finished(false)
+    finished(false),
+    start(startNode)
 {
     st.push({startNode, startNode});
     visited[startNode] = true;
@@ -63,3 +64,6 @@ pair<int, int> DFS::getHistory(int index) const {
     return history[index];
 }
 
+int DFS::getStartNode() const {
+    return start;
+}

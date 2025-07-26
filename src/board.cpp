@@ -132,11 +132,19 @@ void Board::removeNode(Vector2 mousePosition) {
 }
 
 void Board::drawNodes() {
+    int startIndex = currentAlgo ? currentAlgo->getStartNode() : startNodeIndex;
+
     for (const Node& node : nodes) {
         if (!node.isNodeValid()) continue;
 
         Vector2 nodePosition = node.getNodePosition();
-        Color color = node.highlighted() ? RED : BLUE;
+        Color color = BLUE; // standard
+        if (node.getNodeIndex() == startNodeIndex) {
+            color = ORANGE;
+        } else if (node.highlighted()) {
+            color = currentStep == -1 ? ORANGE : RED;
+        }
+
         DrawCircle(nodePosition.x, nodePosition.y, node.getNodeRadius(), color);
     }  
 }
@@ -172,6 +180,7 @@ void Board::runBFS(Vector2 startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
+        startNodeIndex = -1;
         currentAlgo = std::make_unique<BFS>(graph, startNode->getNodeIndex());
         isRunning = true;
     }
@@ -181,6 +190,7 @@ void Board::runDFS(Vector2 startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
+        startNodeIndex = -1;
         currentAlgo = std::make_unique<DFS>(graph, startNode->getNodeIndex());
         isRunning = true;
     }
@@ -197,6 +207,21 @@ void Board::highlightEdge(int from, int to) {
       if (!isDirected && from != to) {
           highlightedEdges.insert({to, from});
       }
+}
+
+void Board::highlightStartingNode(Vector2 mousePosition) {
+    Node* startNode = findNodeFromPosition(mousePosition);
+    if (!startNode) {
+        return;
+    }
+
+    startNodeIndex = startNode->getNodeIndex(); 
+
+    for (Node& node : nodes) {
+        node.resetHighlight();
+    }
+
+    nodes[startNodeIndex].setHighlight();
 }
 
 void Board::resetHighlights() {

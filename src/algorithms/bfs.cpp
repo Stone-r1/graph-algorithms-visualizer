@@ -3,7 +3,8 @@
 BFS::BFS(const vector<vector<pair<int, int>>>& adj, int startNode) : 
     graph(adj),
     visited(adj.size(), false),
-    finished(false)
+    finished(false),
+    start(startNode)
 {
     q.push({startNode, startNode});
     visited[startNode] = true;
@@ -61,4 +62,8 @@ int BFS::getTotalSteps() const {
 
 pair<int, int> BFS::getHistory(int index) const {
     return history[index];
+}
+
+int BFS::getStartNode() const {
+    return start;
 }

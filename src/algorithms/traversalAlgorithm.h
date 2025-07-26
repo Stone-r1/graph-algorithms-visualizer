@@ -14,6 +14,7 @@ public:
     virtual int getCurrentStepIndex() const = 0;
     virtual int getTotalSteps() const = 0;
     virtual std::pair<int, int> getHistory(int index) const = 0;
+    virtual int getStartNode() const = 0;
 };
 
 #endif

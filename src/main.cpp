@@ -91,6 +91,7 @@ void handleRightClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
         // so basically If you clicked on the same node twice
         std::cout << "Selected the starting node.\n";
         startNode = firstNode;
+        board.highlightStartingNode(startNode);
         firstNode = {-1, -1};
     } else {
         lastNode = nodePosition;
