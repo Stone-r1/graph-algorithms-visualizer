@@ -234,7 +234,7 @@ void Board::resetHighlights() {
 
 void Board::stepForward() {
     if (currentAlgo && !currentAlgo->isFinished()) {
-        auto [from, to] = currentAlgo->stepForward();
+        auto [from, to, weight] = currentAlgo->stepForward();
         if (from != -1) {
             highlightEdge(from, to);
             highlightNode(to);
@@ -244,10 +244,10 @@ void Board::stepForward() {
 
 void Board::stepBackward() {
     if (currentAlgo && currentAlgo->getCurrentStepIndex() >= 0) {
-        auto [parent, node] = currentAlgo->stepBackward();
+        auto [parent, node, weight] = currentAlgo->stepBackward();
         resetHighlights();
         for (int i = 0; i <= currentAlgo->getCurrentStepIndex(); i++) {
-            auto [from, to] = currentAlgo->getHistory(i);
+            auto [from, to, weight] = currentAlgo->getHistory(i);
             highlightEdge(from, to);
             highlightNode(to);
         }

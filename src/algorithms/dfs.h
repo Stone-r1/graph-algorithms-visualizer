@@ -15,19 +15,19 @@ private:
     vector<bool> visited;
     bool finished;
     int currentStepIndex = -1;
-    vector<pair<int, int>> history;
+    vector<Step> history;
     int start;
 
 public:
     DFS(const vector<vector<pair<int, int>>>& adj, int startNode);
 
-    pair<int, int> stepForward();
-    pair<int, int> stepBackward();
+    Step stepForward();
+    Step stepBackward();
 
     bool isFinished() const;
     int getCurrentStepIndex() const;
     int getTotalSteps() const;
-    pair<int, int> getHistory(int index) const;
+    Step getHistory(int index) const;
     int getStartNode() const;
 };
 
