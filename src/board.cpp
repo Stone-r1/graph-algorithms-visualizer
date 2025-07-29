@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <ctype.h>
 #include <iostream>
+#include <cmath>
 
 #include "raylib.h"
 #include "board.h"
@@ -165,6 +166,58 @@ void Board::drawEdges() {
     }         
 }
 
+void Board::drawWeights() {
+    for (Node& node : nodes) {
+        if (!node.isNodeValid()) continue;
+
+        std::set<int> neighbors = node.getNodeNeighbors();
+        for (auto it = neighbors.begin(); it != neighbors.end(); ++it) {
+            if (!nodes[*it].isNodeValid()) continue;
+            if (!isDirected && node.getNodeIndex() > *it) continue;
+
+            bool found = false;
+            int weight = 0;
+            for (const auto& [neighbor, w] : graph[node.getNodeIndex()]) {
+                if (neighbor == *it) {
+                    weight = w;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) continue;
+
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%d", weight);
+
+            Vector2 posFrom = node.getNodePosition();
+            Vector2 posTo = nodes[*it].getNodePosition();
+
+            // entire point is to avoid weight and edge intersection.
+            float midX = (posFrom.x + posTo.x) / 2;
+            float midY = (posFrom.y + posTo.y) / 2;
+
+            float dx = posTo.x - posFrom.x;
+            float dy = posTo.y - posFrom.y;
+
+            float length = sqrtf(dx * dx + dy * dy);
+            if (length == 0) length = 1; 
+
+            // Perpendicular vector (normal)
+            float nx = -dy / length;
+            float ny = dx / length;
+
+            float offset = 20.0f;
+
+            midX += nx * offset;
+            midY += ny * offset;
+
+            DrawText(buffer, midX - 10, midY - 10, 30, BLACK);
+            // ==========================
+        }
+    }
+}
+
 void Board::resetRunning() {
     currentAlgo.reset();
     resetHighlights();
@@ -225,6 +278,16 @@ void Board::highlightEdge(int from, int to) {
       }
 }
 
+void Board::highlightWeight(int from, int to, int weight) {
+    char buffer[10];
+    snprintf(buffer, sizeof(buffer), "%d", weight);
+
+    Vector2 posFrom = nodes[from].getNodePosition();
+    Vector2 posTo = nodes[to].getNodePosition();
+
+    DrawText(buffer, (posFrom.x + posTo.x) / 2, (posFrom.y + posTo.y) / 2, 10, BLACK);
+}
+
 void Board::highlightStartingNode(Vector2 mousePosition) {
     Node* startNode = findNodeFromPosition(mousePosition);
     if (!startNode) {
@@ -254,6 +317,10 @@ void Board::stepForward() {
         if (from != -1) {
             highlightEdge(from, to);
             highlightNode(to);
+
+            if (isGraphWeighted()) {
+                highlightWeight(from, to, weight);
+            }
         }
     }
 }

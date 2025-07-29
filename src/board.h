@@ -59,6 +59,7 @@ public:
     // ==== highlights ====
     void highlightNode(int index);
     void highlightEdge(int from, int to);
+    void highlightWeight(int from, int to, int weight);
     void highlightStartingNode(Vector2 mousePosition);
     void resetHighlights();
     // ====================
@@ -68,6 +69,7 @@ public:
 
     void drawNodes();
     void drawEdges();
+    void drawWeights();
 
     bool isGraphEmpty() const;
     bool isGraphWeighted() const;
