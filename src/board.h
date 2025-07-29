@@ -8,6 +8,7 @@
 #include "node.h"
 #include "algorithms/bfs.h"
 #include "algorithms/dfs.h"
+#include "algorithms/dijkstra.h"
 using std::vector;
 
 
@@ -49,6 +50,7 @@ public:
     // ==== algorithms ====
     void runBFS(Vector2 startNodePosition);
     void runDFS(Vector2 startNodePosition);
+    void runDijkstra(Vector2 startNodePosition);
 
     void stepForward();
     void stepBackward();

@@ -2,6 +2,7 @@
 #include <set>
 #include <algorithm>
 #include <ctype.h>
+#include <iostream>
 
 #include "raylib.h"
 #include "board.h"
@@ -192,6 +193,21 @@ void Board::runDFS(Vector2 startNodePosition) {
         resetRunning();
         startNodeIndex = -1;
         currentAlgo = std::make_unique<DFS>(graph, startNode->getNodeIndex());
+        isRunning = true;
+    }
+}
+
+void Board::runDijkstra(Vector2 startNodePosition) {
+    if (!isGraphWeighted()) {
+        std::cout << "Graph must be weighted to run dijkstra\n";
+        return;
+    }
+
+    Node* startNode = findNodeFromPosition(startNodePosition);
+    if (startNode) {
+        resetRunning();
+        startNodeIndex = -1;
+        currentAlgo = std::make_unique<Dijkstra>(graph, startNode->getNodeIndex());
         isRunning = true;
     }
 }

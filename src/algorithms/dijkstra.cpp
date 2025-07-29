@@ -8,10 +8,8 @@ Dijkstra::Dijkstra(const vector<vector<pair<int, int>>>& adj, int startNode) :
     finished(false),
     start(startNode)
 {
-    distances[start] = 0;
-    pq.emplace(0, startNode);
-    history.push_back({start, start});
-    visited[startNode] = true;
+    distances[startNode] = 0;
+    pq.emplace(0, startNode); 
 }
 
 Step Dijkstra::stepForward() {
@@ -19,7 +17,7 @@ Step Dijkstra::stepForward() {
         return {-1, -1, -1};
     } 
     
-    if (currentStepIndex + 1 < static_cast<int>(history.size())) {
+    if (currentStepIndex + 1 < history.size()) {
         return history[++currentStepIndex];
     }
 
@@ -30,23 +28,23 @@ Step Dijkstra::stepForward() {
         if (visited[node]) continue;
         visited[node] = true;
 
-        Step step = {node, node, distances[node]};
-        history.push_back(step);
-        currentStepIndex++;
+        bool stepAdded = false;
 
         for (auto& [neighbor, weight] : graph[node]) {
-            if (visited[neighbor] || distances[neighbor] <= distances[node] + weight) {
+            if (distances[neighbor] <= distance + weight) {
                 continue;
             }
 
-            distances[neighbor] = distances[node] + weight;
+            distances[neighbor] = distance + weight;
             pq.emplace(distances[neighbor], neighbor);
-
-            Step relaxStep = {node, neighbor, distances[neighbor]};
-            history.push_back(relaxStep);
+            Step step = {node, neighbor, distances[neighbor]};
+            history.push_back(step);
+            stepAdded = true;
         }
 
-        return step;
+        if (stepAdded) {
+            return history[++currentStepIndex];
+        }
     }
 
     finished = true;
@@ -54,11 +52,11 @@ Step Dijkstra::stepForward() {
 }
 
 Step Dijkstra::stepBackward() {
-    if (currentStepIndex < 0) {
+    if (currentStepIndex <= 0) {
         return {-1, -1, -1};
     }
     
-    return history[currentStepIndex--]; 
+    return history[--currentStepIndex]; 
 }
 
 bool Dijkstra::isFinished() const {

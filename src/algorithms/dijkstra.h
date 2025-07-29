@@ -4,6 +4,7 @@
 #include "traversalAlgorithm.h"
 #include <vector>
 #include <queue>
+#include <tuple>
 
 using std::vector;
 using std::pair;
@@ -15,6 +16,7 @@ private:
     std::vector<long long> distances;
     vector<bool> visited;
     bool finished;
+    bool precompiled = false;
     int currentStepIndex = -1;
     vector<Step> history;
     int start;
