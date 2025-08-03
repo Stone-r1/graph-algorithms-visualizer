@@ -32,7 +32,7 @@ void Board::clear() {
     nodes.assign(MAX_NODES, Node::makeInvalidNode());
 }
 
-Node* Board::findNodeFromPosition(Vector2 firstNodePosition) {
+Node* Board::findNodeFromPosition(const Vector2& firstNodePosition) {
     for (Node& node : nodes) {
         if (node.isNodeValid() && node.isInRadiusDomain(firstNodePosition)) {
             return &node;
@@ -41,7 +41,7 @@ Node* Board::findNodeFromPosition(Vector2 firstNodePosition) {
     return nullptr;
 }
 
-Vector2 Board::isInNodeDomain(Vector2 mousePosition) {
+Vector2 Board::isInNodeDomain(const Vector2& mousePosition) {
     for (const Node& node : nodes) {
         if (node.isNodeValid() && node.isInRadiusDomain(mousePosition)) {
             return node.getNodePosition();
@@ -51,7 +51,7 @@ Vector2 Board::isInNodeDomain(Vector2 mousePosition) {
     return {0.0f, 0.0f};
 }
 
-void Board::addNode(Vector2 mousePosition, float currentRadius) {
+void Board::addNode(const Vector2& mousePosition, const float& currentRadius) {
     for (const Node& node : nodes) {
         float minDistance = node.getNodeRadius() * 3;
 
@@ -71,7 +71,7 @@ void Board::addNode(Vector2 mousePosition, float currentRadius) {
     nodes[lastNodeIndex++] = currentNode;
 }
 
-void Board::addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition, int weight) {
+void Board::addEdge(const Vector2& firstNodePosition, const Vector2& secondNodePosition, int weight) {
     Node* firstNode = findNodeFromPosition(firstNodePosition);
     Node* secondNode = findNodeFromPosition(secondNodePosition);
 
@@ -93,7 +93,7 @@ void Board::addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition, int w
     }
 }
 
-void Board::removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
+void Board::removeEdge(const Vector2& firstNodePosition, const Vector2& secondNodePosition) {
     Node* firstNode = findNodeFromPosition(firstNodePosition);
     Node* secondNode = findNodeFromPosition(secondNodePosition);
 
@@ -121,7 +121,7 @@ void Board::removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition) {
     }
 }
 
-void Board::removeNode(Vector2 mousePosition) {
+void Board::removeNode(const Vector2& mousePosition) {
     Node* nodeToRemove = findNodeFromPosition(mousePosition);
     if (!nodeToRemove) return;
 
@@ -248,7 +248,7 @@ void Board::resetRunning() {
     std::fill(std::begin(weightInput), std::end(weightInput), '\0');
 }
 
-void Board::runBFS(Vector2 startNodePosition) {
+void Board::runBFS(const Vector2& startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
@@ -258,7 +258,7 @@ void Board::runBFS(Vector2 startNodePosition) {
     }
 }
 
-void Board::runDFS(Vector2 startNodePosition) {
+void Board::runDFS(const Vector2& startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
@@ -268,7 +268,7 @@ void Board::runDFS(Vector2 startNodePosition) {
     }
 }
 
-void Board::runDijkstra(Vector2 startNodePosition) {
+void Board::runDijkstra(const Vector2& startNodePosition) {
     if (!isGraphWeighted()) {
         std::cout << "Graph must be weighted to run dijkstra\n";
         return;
@@ -283,24 +283,24 @@ void Board::runDijkstra(Vector2 startNodePosition) {
     }
 }
 
-void Board::highlightNode(int index) {
+void Board::highlightNode(const int& index) {
     if (index >= 0 && index < nodes.size() && nodes[index].isNodeValid()) {
         nodes[index].setHighlight();
     }
 }
 
-void Board::highlightEdge(int from, int to) {
+void Board::highlightEdge(const int& from, const int& to) {
       highlightedEdges.insert({from, to});
       if (!isDirected && from != to) {
           highlightedEdges.insert({to, from});
       }
 }
 
-void Board::highlightWeight(int to, int weight) {
+void Board::highlightWeight(const int& to, const int& weight) {
     highlightedWeights[to] = weight; 
 }
 
-void Board::highlightStartingNode(Vector2 mousePosition) {
+void Board::highlightStartingNode(const Vector2& mousePosition) {
     Node* startNode = findNodeFromPosition(mousePosition);
     if (!startNode) {
         return;

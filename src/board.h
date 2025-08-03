@@ -35,35 +35,35 @@ private:
 
     std::unique_ptr<TraversalAlgorithm> currentAlgo;
 
-    Node* findNodeFromPosition(Vector2 firstNodePosition);
+    Node* findNodeFromPosition(const Vector2& firstNodePosition);
 
 public:
     Board();
 
     void clear();
 
-    Vector2 isInNodeDomain(Vector2 mousePosition);
+    Vector2 isInNodeDomain(const Vector2& mousePosition);
 
-    void addNode(Vector2 mousePosition, float currentRadius);
-    void addEdge(Vector2 firstNodePosition, Vector2 secondNodePosition, int weight = 1);
-    void removeEdge(Vector2 firstNodePosition, Vector2 secondNodePosition);
-    void removeNode(Vector2 mousePosition);
+    void addNode(const Vector2& mousePosition, const float& currentRadius);
+    void addEdge(const Vector2& firstNodePosition, const Vector2& secondNodePosition, int weight = 1);
+    void removeEdge(const Vector2& firstNodePosition, const Vector2& secondNodePosition);
+    void removeNode(const Vector2& mousePosition);
     void clearGraph();
 
     // ==== algorithms ====
-    void runBFS(Vector2 startNodePosition);
-    void runDFS(Vector2 startNodePosition);
-    void runDijkstra(Vector2 startNodePosition);
+    void runBFS(const Vector2& startNodePosition);
+    void runDFS(const Vector2& startNodePosition);
+    void runDijkstra(const Vector2& startNodePosition);
 
     void stepForward();
     void stepBackward();
     // ====================
     
     // ==== highlights ====
-    void highlightNode(int index);
-    void highlightEdge(int from, int to);
-    void highlightWeight(int to, int weight);
-    void highlightStartingNode(Vector2 mousePosition);
+    void highlightNode(const int& index);
+    void highlightEdge(const int& from, const int& to);
+    void highlightWeight(const int& to, const int& weight);
+    void highlightStartingNode(const Vector2& mousePosition);
     void resetHighlights();
     // ====================
 
