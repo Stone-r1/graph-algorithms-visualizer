@@ -2,7 +2,7 @@
 #define NODE_H
 
 #include "raylib.h"
-#include <set>
+#include <unordered_set>
 
 class Node {
 private:
@@ -10,7 +10,7 @@ private:
     Vector2 nodePosition;
     float nodeRadius;
     bool isActive;
-    std::set<int> neighbors;
+    std::unordered_set<int> neighbors;
 
     bool isHighlighted = false;
 
@@ -21,7 +21,7 @@ public:
     int getNodeIndex() const;
     Vector2 getNodePosition() const;
     float getNodeRadius() const;
-    std::set<int> getNodeNeighbors() const;
+    const std::unordered_set<int>& getNodeNeighbors() const; // no copies
 
     bool isNodeActive() const;
     bool isNodeValid() const;

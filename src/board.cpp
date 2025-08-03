@@ -164,7 +164,7 @@ void Board::drawEdges() {
     for (const Node& node : nodes) {
         if (!node.isNodeValid()) continue;
 
-        std::set<int> neighbors = node.getNodeNeighbors();
+        std::unordered_set<int> neighbors = node.getNodeNeighbors();
         for (auto it = neighbors.begin(); it != neighbors.end(); it++) {
             Node* neighbor = &nodes[*it];
             if (!neighbor->isNodeValid()) continue;
@@ -188,7 +188,7 @@ void Board::drawWeights() {
     for (Node& node : nodes) {
         if (!node.isNodeValid()) continue;
 
-        std::set<int> neighbors = node.getNodeNeighbors();
+        std::unordered_set<int> neighbors = node.getNodeNeighbors();
         for (auto it = neighbors.begin(); it != neighbors.end(); ++it) {
             if (!nodes[*it].isNodeValid()) continue;
             if (!isDirected && node.getNodeIndex() > *it) continue;

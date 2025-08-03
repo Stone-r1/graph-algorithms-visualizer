@@ -28,7 +28,7 @@ float Node::getNodeRadius() const {
     return nodeRadius;
 }
 
-std::set<int> Node::getNodeNeighbors() const {
+const std::unordered_set<int>& Node::getNodeNeighbors() const {
     return neighbors;
 }
 
