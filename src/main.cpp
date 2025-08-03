@@ -26,6 +26,11 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
     } else {
         sidebar.handleMouse(mouse);
 
+        if (sidebar.isButtonClicked("Clear")) {
+            board.clear();
+            return;
+        }
+
         if (sidebar.isButtonClicked("Small")) {
             radius = SMALL;
             sidebar.resetClicks();
@@ -52,6 +57,12 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
 
         if (sidebar.isButtonClicked("DFS")) {
             board.runDFS(startNode);
+            sidebar.resetClicks();
+            return;
+        }
+
+        if (sidebar.isButtonClicked("Dijkstra")) {
+            board.runDijkstra(startNode);
             sidebar.resetClicks();
             return;
         }
@@ -91,8 +102,8 @@ void handleRightClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
         // so basically If you clicked on the same node twice
         std::cout << "Selected the starting node.\n";
         startNode = firstNode;
-        board.highlightStartingNode(startNode);
         firstNode = {-1, -1};
+        board.highlightStartingNode(startNode);
     } else {
         lastNode = nodePosition;
         if (board.isGraphWeighted()) {
@@ -138,6 +149,9 @@ int main() {
             sidebar.draw(); 
             board.drawEdges();
             board.drawNodes();
+            if (board.isGraphWeighted()) {
+                board.drawWeights();
+            }
 
             if (weightBox) {
                 board.askForWeight();
