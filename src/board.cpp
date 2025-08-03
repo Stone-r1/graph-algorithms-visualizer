@@ -18,10 +18,19 @@ Board::Board() :
     isDirected(false),
     isWeighted(false),
     isRunning(false),
-    lastClickedNode(-1, {0, 0}, 0),
+    lastClickedNode(Node::makeInvalidNode()),
     graph(MAX_NODES),
-    nodes(MAX_NODES, Node(-1, {0, 0}, 0))
+    nodes(MAX_NODES, Node::makeInvalidNode())
 {}
+
+void Board::clear() {
+    resetRunning();
+    graph.clear();
+    nodes.clear();
+
+    graph.resize(MAX_NODES);
+    nodes.assign(MAX_NODES, Node::makeInvalidNode());
+}
 
 Node* Board::findNodeFromPosition(Vector2 firstNodePosition) {
     for (Node& node : nodes) {
@@ -130,7 +139,7 @@ void Board::removeNode(Vector2 mousePosition) {
     }
 
     // mark node as invalid
-    *nodeToRemove = Node(-1, {0.0f, 0.0f}, 0.0f);
+    *nodeToRemove = Node::makeInvalidNode();
 }
 
 void Board::drawNodes() {

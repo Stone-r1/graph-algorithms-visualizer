@@ -37,6 +37,8 @@ public:
     void setHighlight(); 
     void resetHighlight(); 
     bool highlighted() const;
+
+    static Node makeInvalidNode();
 };
 
 #endif

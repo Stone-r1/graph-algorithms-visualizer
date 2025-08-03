@@ -81,3 +81,7 @@ void Node::resetHighlight() {
 bool Node::highlighted() const {
     return isHighlighted;
 }
+
+Node Node::makeInvalidNode() {
+    return Node(-1, {0, 0}, 0);
+}

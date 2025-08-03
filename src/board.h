@@ -40,6 +40,8 @@ private:
 public:
     Board();
 
+    void clear();
+
     Vector2 isInNodeDomain(Vector2 mousePosition);
 
     void addNode(Vector2 mousePosition, float currentRadius);
