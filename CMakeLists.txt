@@ -12,6 +12,7 @@ set(SOURCES
     src/sidebar.cpp
     src/algorithms/bfs.cpp
     src/algorithms/dfs.cpp
+    src/algorithms/dijkstra.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

@@ -8,6 +8,7 @@
 #include "node.h"
 #include "algorithms/bfs.h"
 #include "algorithms/dfs.h"
+#include "algorithms/dijkstra.h"
 using std::vector;
 
 
@@ -30,6 +31,7 @@ private:
     vector<vector<pair<int, int>>> graph;
     vector<Node> nodes;
     std::set<pair<int, int>> highlightedEdges;
+    std::unordered_map<int, int> highlightedWeights;
 
     std::unique_ptr<TraversalAlgorithm> currentAlgo;
 
@@ -49,6 +51,7 @@ public:
     // ==== algorithms ====
     void runBFS(Vector2 startNodePosition);
     void runDFS(Vector2 startNodePosition);
+    void runDijkstra(Vector2 startNodePosition);
 
     void stepForward();
     void stepBackward();
@@ -57,6 +60,7 @@ public:
     // ==== highlights ====
     void highlightNode(int index);
     void highlightEdge(int from, int to);
+    void highlightWeight(int to, int weight);
     void highlightStartingNode(Vector2 mousePosition);
     void resetHighlights();
     // ====================
@@ -66,6 +70,7 @@ public:
 
     void drawNodes();
     void drawEdges();
+    void drawWeights();
 
     bool isGraphEmpty() const;
     bool isGraphWeighted() const;

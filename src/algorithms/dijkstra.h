@@ -1,25 +1,28 @@
-#ifndef DFS_H
-#define DFS_H
+#ifndef DIJKSTRA_H
+#define DIJKSTRA_H
 
 #include "traversalAlgorithm.h"
 #include <vector>
-#include <stack>
+#include <queue>
+#include <tuple>
 
 using std::vector;
 using std::pair;
 
-class DFS : public TraversalAlgorithm {
+class Dijkstra : public TraversalAlgorithm {
 private:
     const vector<vector<pair<int, int>>>& graph;
-    std::stack<pair<int, int>> st;
+    std::priority_queue<pair<int, int>, vector<pair<int, int>>, std::greater<>> pq;
+    std::vector<long long> distances;
     vector<bool> visited;
     bool finished;
+    bool precompiled = false;
     int currentStepIndex = -1;
     vector<Step> history;
     int start;
 
 public:
-    DFS(const vector<vector<pair<int, int>>>& adj, int startNode);
+    Dijkstra(const vector<vector<pair<int, int>>>& adj, int startNode);
 
     Step stepForward();
     Step stepBackward();
@@ -29,6 +32,7 @@ public:
     int getTotalSteps() const;
     Step getHistory(int index) const;
     int getStartNode() const;
+    int getCumulativeDistance(int nodeIndex) const;
 };
 
 #endif

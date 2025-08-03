@@ -10,9 +10,9 @@ BFS::BFS(const vector<vector<pair<int, int>>>& adj, int startNode) :
     visited[startNode] = true;
 }
 
-pair<int, int> BFS::stepForward() {
+Step BFS::stepForward() {
     if (finished) {
-        return {-1, -1};
+        return {-1, -1, -1};
     } 
     
     if (currentStepIndex + 1 < history.size()) {
@@ -21,7 +21,7 @@ pair<int, int> BFS::stepForward() {
 
     if (q.empty()) {
         finished = true;
-        return {-1, -1};
+        return {-1, -1, -1};
     }
 
     auto [parent, node] = q.front();
@@ -35,13 +35,14 @@ pair<int, int> BFS::stepForward() {
     }
     
     currentStepIndex++;
-    history.push_back({parent, node});
-    return {parent, node};
+    Step step = {parent, node, 1};
+    history.push_back(step);
+    return step;
 }
 
-pair<int, int> BFS::stepBackward() {
+Step BFS::stepBackward() {
     if (currentStepIndex < 0) {
-        return {-1, -1};
+        return {-1, -1, -1};
     }
     
     return history[currentStepIndex--]; 
@@ -51,7 +52,6 @@ bool BFS::isFinished() const {
     return finished && currentStepIndex + 1 >= history.size();
 }
 
-
 int BFS::getCurrentStepIndex() const {
     return currentStepIndex;
 }
@@ -60,7 +60,7 @@ int BFS::getTotalSteps() const {
     return history.size();
 }
 
-pair<int, int> BFS::getHistory(int index) const {
+Step BFS::getHistory(int index) const {
     return history[index];
 }
 

@@ -2,6 +2,8 @@
 #include <set>
 #include <algorithm>
 #include <ctype.h>
+#include <iostream>
+#include <cmath>
 
 #include "raylib.h"
 #include "board.h"
@@ -164,6 +166,67 @@ void Board::drawEdges() {
     }         
 }
 
+void Board::drawWeights() {
+    for (auto& [nodeIndex, weight] : highlightedWeights) {
+
+        char buffer[10];
+        snprintf(buffer, sizeof(buffer), "%d", weight);
+        
+        Vector2 positions = nodes[nodeIndex].getNodePosition();
+        DrawText(buffer, positions.x - 10, positions.y - 10, 30, BLACK);
+    }
+
+    for (Node& node : nodes) {
+        if (!node.isNodeValid()) continue;
+
+        std::set<int> neighbors = node.getNodeNeighbors();
+        for (auto it = neighbors.begin(); it != neighbors.end(); ++it) {
+            if (!nodes[*it].isNodeValid()) continue;
+            if (!isDirected && node.getNodeIndex() > *it) continue;
+
+            bool found = false;
+            int weight = 0;
+            for (const auto& [neighbor, w] : graph[node.getNodeIndex()]) {
+                if (neighbor == *it) {
+                    weight = w;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) continue;
+
+            char buffer[10];
+            snprintf(buffer, sizeof(buffer), "%d", weight);
+
+            Vector2 posFrom = node.getNodePosition();
+            Vector2 posTo = nodes[*it].getNodePosition();
+
+            // entire point is to avoid weight and edge intersection.
+            float midX = (posFrom.x + posTo.x) / 2;
+            float midY = (posFrom.y + posTo.y) / 2;
+
+            float dx = posTo.x - posFrom.x;
+            float dy = posTo.y - posFrom.y;
+
+            float length = sqrtf(dx * dx + dy * dy);
+            if (length == 0) length = 1; 
+
+            // Perpendicular vector (normal)
+            float nx = -dy / length;
+            float ny = dx / length;
+
+            float offset = 20.0f;
+
+            midX += nx * offset;
+            midY += ny * offset;
+
+            DrawText(buffer, midX - 10, midY - 10, 30, BLACK);
+            // ==========================
+        }
+    }
+}
+
 void Board::resetRunning() {
     currentAlgo.reset();
     resetHighlights();
@@ -196,6 +259,21 @@ void Board::runDFS(Vector2 startNodePosition) {
     }
 }
 
+void Board::runDijkstra(Vector2 startNodePosition) {
+    if (!isGraphWeighted()) {
+        std::cout << "Graph must be weighted to run dijkstra\n";
+        return;
+    }
+
+    Node* startNode = findNodeFromPosition(startNodePosition);
+    if (startNode) {
+        resetRunning();
+        startNodeIndex = -1;
+        currentAlgo = std::make_unique<Dijkstra>(graph, startNode->getNodeIndex());
+        isRunning = true;
+    }
+}
+
 void Board::highlightNode(int index) {
     if (index >= 0 && index < nodes.size() && nodes[index].isNodeValid()) {
         nodes[index].setHighlight();
@@ -207,6 +285,10 @@ void Board::highlightEdge(int from, int to) {
       if (!isDirected && from != to) {
           highlightedEdges.insert({to, from});
       }
+}
+
+void Board::highlightWeight(int to, int weight) {
+    highlightedWeights[to] = weight; 
 }
 
 void Board::highlightStartingNode(Vector2 mousePosition) {
@@ -230,12 +312,17 @@ void Board::resetHighlights() {
     }
 
     highlightedEdges.clear();
+    highlightedWeights.clear();
 }
 
 void Board::stepForward() {
     if (currentAlgo && !currentAlgo->isFinished()) {
-        auto [from, to] = currentAlgo->stepForward();
-        if (from != -1) {
+        auto [from, to, weight] = currentAlgo->stepForward();
+        if (from != -1) { 
+            if (isGraphWeighted()) {
+                highlightWeight(to, weight);
+            }
+
             highlightEdge(from, to);
             highlightNode(to);
         }
@@ -244,12 +331,16 @@ void Board::stepForward() {
 
 void Board::stepBackward() {
     if (currentAlgo && currentAlgo->getCurrentStepIndex() >= 0) {
-        auto [parent, node] = currentAlgo->stepBackward();
+        auto [parent, node, weight] = currentAlgo->stepBackward();
         resetHighlights();
         for (int i = 0; i <= currentAlgo->getCurrentStepIndex(); i++) {
-            auto [from, to] = currentAlgo->getHistory(i);
+            auto [from, to, weight] = currentAlgo->getHistory(i); 
+            if (isGraphWeighted()) {
+                highlightWeight(to, weight);
+            }
+
             highlightEdge(from, to);
-            highlightNode(to);
+            highlightNode(to); 
         }
     }
 }
