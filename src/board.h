@@ -31,6 +31,7 @@ private:
     vector<vector<pair<int, int>>> graph;
     vector<Node> nodes;
     std::set<pair<int, int>> highlightedEdges;
+    std::unordered_map<int, int> highlightedWeights;
 
     std::unique_ptr<TraversalAlgorithm> currentAlgo;
 
@@ -59,7 +60,7 @@ public:
     // ==== highlights ====
     void highlightNode(int index);
     void highlightEdge(int from, int to);
-    void highlightWeight(int from, int to, int weight);
+    void highlightWeight(int to, int weight);
     void highlightStartingNode(Vector2 mousePosition);
     void resetHighlights();
     // ====================

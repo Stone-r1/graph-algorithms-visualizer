@@ -167,6 +167,15 @@ void Board::drawEdges() {
 }
 
 void Board::drawWeights() {
+    for (auto& [nodeIndex, weight] : highlightedWeights) {
+
+        char buffer[10];
+        snprintf(buffer, sizeof(buffer), "%d", weight);
+        
+        Vector2 positions = nodes[nodeIndex].getNodePosition();
+        DrawText(buffer, positions.x - 10, positions.y - 10, 30, BLACK);
+    }
+
     for (Node& node : nodes) {
         if (!node.isNodeValid()) continue;
 
@@ -278,14 +287,8 @@ void Board::highlightEdge(int from, int to) {
       }
 }
 
-void Board::highlightWeight(int from, int to, int weight) {
-    char buffer[10];
-    snprintf(buffer, sizeof(buffer), "%d", weight);
-
-    Vector2 posFrom = nodes[from].getNodePosition();
-    Vector2 posTo = nodes[to].getNodePosition();
-
-    DrawText(buffer, (posFrom.x + posTo.x) / 2, (posFrom.y + posTo.y) / 2, 10, BLACK);
+void Board::highlightWeight(int to, int weight) {
+    highlightedWeights[to] = weight; 
 }
 
 void Board::highlightStartingNode(Vector2 mousePosition) {
@@ -309,18 +312,19 @@ void Board::resetHighlights() {
     }
 
     highlightedEdges.clear();
+    highlightedWeights.clear();
 }
 
 void Board::stepForward() {
     if (currentAlgo && !currentAlgo->isFinished()) {
         auto [from, to, weight] = currentAlgo->stepForward();
-        if (from != -1) {
+        if (from != -1) { 
+            if (isGraphWeighted()) {
+                highlightWeight(to, weight);
+            }
+
             highlightEdge(from, to);
             highlightNode(to);
-
-            if (isGraphWeighted()) {
-                highlightWeight(from, to, weight);
-            }
         }
     }
 }
@@ -330,9 +334,13 @@ void Board::stepBackward() {
         auto [parent, node, weight] = currentAlgo->stepBackward();
         resetHighlights();
         for (int i = 0; i <= currentAlgo->getCurrentStepIndex(); i++) {
-            auto [from, to, weight] = currentAlgo->getHistory(i);
+            auto [from, to, weight] = currentAlgo->getHistory(i); 
+            if (isGraphWeighted()) {
+                highlightWeight(to, weight);
+            }
+
             highlightEdge(from, to);
-            highlightNode(to);
+            highlightNode(to); 
         }
     }
 }

@@ -32,6 +32,7 @@ public:
     int getTotalSteps() const;
     Step getHistory(int index) const;
     int getStartNode() const;
+    int getCumulativeDistance(int nodeIndex) const;
 };
 
 #endif

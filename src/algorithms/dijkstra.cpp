@@ -9,16 +9,17 @@ Dijkstra::Dijkstra(const vector<vector<pair<int, int>>>& adj, int startNode) :
     start(startNode)
 {
     distances[startNode] = 0;
-    pq.emplace(0, startNode); 
+    pq.emplace(0, startNode);
+    history.push_back({startNode, startNode, 0});
 }
 
-Step Dijkstra::stepForward() {
-    if (finished) {
-        return {-1, -1, -1};
-    } 
-    
+Step Dijkstra::stepForward() {  
     if (currentStepIndex + 1 < history.size()) {
         return history[++currentStepIndex];
+    }
+
+    if (finished) {
+        return {-1, -1, -1};
     }
 
     while (!pq.empty()) {
@@ -77,4 +78,8 @@ Step Dijkstra::getHistory(int index) const {
 
 int Dijkstra::getStartNode() const {
     return start;
+}
+
+int Dijkstra::getCumulativeDistance(int nodeIndex) const {
+    return distances[nodeIndex];
 }
