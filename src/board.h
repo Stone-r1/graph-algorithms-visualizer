@@ -9,6 +9,7 @@
 #include "algorithms/bfs.h"
 #include "algorithms/dfs.h"
 #include "algorithms/dijkstra.h"
+#include "algorithms/bellmanFord.h"
 using std::vector;
 
 
@@ -54,6 +55,7 @@ public:
     void runBFS(const Vector2& startNodePosition);
     void runDFS(const Vector2& startNodePosition);
     void runDijkstra(const Vector2& startNodePosition);
+    void runBellmanFord(const Vector2& startNodePosition);
 
     void stepForward();
     void stepBackward();

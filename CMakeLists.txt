@@ -13,6 +13,7 @@ set(SOURCES
     src/algorithms/bfs.cpp
     src/algorithms/dfs.cpp
     src/algorithms/dijkstra.cpp
+    src/algorithms/bellmanFord.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

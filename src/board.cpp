@@ -157,6 +157,7 @@ void Board::drawNodes() {
         }
 
         DrawCircle(nodePosition.x, nodePosition.y, node.getNodeRadius(), color);
+        DrawRing(nodePosition, node.getNodeRadius() - node.getNodeRadius() / 8, node.getNodeRadius(), 0.0f, 360.0f, 100, BLACK);
     }  
 }
 
@@ -170,7 +171,8 @@ void Board::drawEdges() {
             if (!neighbor->isNodeValid()) continue;
 
             Color color = highlightedEdges.count({node.getNodeIndex(), neighbor->getNodeIndex()}) ? DARKBLUE : GREEN;
-            DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 5.0f, color);
+            DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 6.0f, color);
+            // DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 2.0f, color);
         }
     }         
 }
@@ -279,6 +281,21 @@ void Board::runDijkstra(const Vector2& startNodePosition) {
         resetRunning();
         startNodeIndex = -1;
         currentAlgo = std::make_unique<Dijkstra>(graph, startNode->getNodeIndex());
+        isRunning = true;
+    }
+}
+
+void Board::runBellmanFord(const Vector2& startNodePosition) {
+    if (!isGraphWeighted()) {
+        std::cout << "Graph must be weighted to run dijkstra\n";
+        return;
+    }
+
+    Node* startNode = findNodeFromPosition(startNodePosition);
+    if (startNode) {
+        resetRunning();
+        startNodeIndex = -1;
+        currentAlgo = std::make_unique<BellmanFord>(graph, startNode->getNodeIndex());
         isRunning = true;
     }
 }
