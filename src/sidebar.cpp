@@ -15,7 +15,7 @@ Sidebar::Sidebar(int screenHeight) :
     float buttonHeight = 60.0f;
     float yOffset = margin;
 
-    std::vector<std::string> labels = {"Run", "Pause", "Clear", "Weighted", "DFS", "BFS", "Dijkstra", "Bellman-Ford"};
+    std::vector<std::string> labels = {"Clear", "Weighted", "DFS", "BFS", "Dijkstra", "Bellman-Ford"};
 
     for (const auto& label : labels) {
         buttons.emplace_back(Rectangle{(float)x + margin, yOffset, (float)width - 2 * margin, (float)buttonHeight}, label);
@@ -32,8 +32,8 @@ Sidebar::Sidebar(int screenHeight) :
     }
 }
 
-void Sidebar::draw() {
-    DrawRectangle(x, 0, width, height, GRAY);
+void Sidebar::draw(int screenHeight) {
+    DrawRectangle(x, 0, width, screenHeight, GRAY);
 
     for (const auto& button : buttons) {
         DrawRectangleRec(button.domain, LIGHTGRAY);

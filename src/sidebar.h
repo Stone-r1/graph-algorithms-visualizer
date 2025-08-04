@@ -28,7 +28,7 @@ private:
 public:
     Sidebar(int screenHeight); 
 
-    void draw();
+    void draw(int screenHeight);
     void handleMouse(Vector2 mousePosition);
     bool isInSidebarDomain(Vector2 mousePosition, float currentRadius);
 

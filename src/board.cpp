@@ -251,6 +251,10 @@ void Board::resetRunning() {
     std::fill(std::begin(weightInput), std::end(weightInput), '\0');
 }
 
+bool Board::isAlgorithmRunning() const {
+    return isRunning;
+}
+
 void Board::runBFS(const Vector2& startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {

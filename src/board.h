@@ -71,6 +71,7 @@ public:
 
     void stopRunning();
     void resetRunning();
+    bool isAlgorithmRunning() const;
 
     void drawNodes();
     void drawEdges();
