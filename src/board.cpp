@@ -157,6 +157,7 @@ void Board::drawNodes() {
         }
 
         DrawCircle(nodePosition.x, nodePosition.y, node.getNodeRadius(), color);
+        DrawRing(nodePosition, node.getNodeRadius() - node.getNodeRadius() / 8, node.getNodeRadius(), 0.0f, 360.0f, 100, BLACK);
     }  
 }
 
@@ -170,7 +171,8 @@ void Board::drawEdges() {
             if (!neighbor->isNodeValid()) continue;
 
             Color color = highlightedEdges.count({node.getNodeIndex(), neighbor->getNodeIndex()}) ? DARKBLUE : GREEN;
-            DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 5.0f, color);
+            DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 6.0f, color);
+            // DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 2.0f, color);
         }
     }         
 }
