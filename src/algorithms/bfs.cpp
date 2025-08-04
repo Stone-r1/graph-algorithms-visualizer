@@ -11,13 +11,13 @@ BFS::BFS(const vector<vector<pair<int, int>>>& adj, int startNode) :
 }
 
 Step BFS::stepForward() {
-    if (finished) {
-        return Step::invalidStep();
-    } 
-    
     if (currentStepIndex + 1 < history.size()) {
         return history[++currentStepIndex];
     }
+
+    if (finished) {
+        return Step::invalidStep();
+    } 
 
     if (q.empty()) {
         finished = true;

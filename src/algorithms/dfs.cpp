@@ -10,15 +10,15 @@ DFS::DFS(const vector<vector<pair<int, int>>>& adj, int startNode) :
     visited[startNode] = true;
 }
 
-Step DFS::stepForward() {
-    if (finished) {
-        return Step::invalidStep();
-    } 
-    
+Step DFS::stepForward() {   
     if (currentStepIndex + 1 < history.size()) {
         return history[++currentStepIndex];
     }
 
+    if (finished) {
+        return Step::invalidStep();
+    } 
+ 
     if (st.empty()) {
         finished = true;
         return Step::invalidStep();
