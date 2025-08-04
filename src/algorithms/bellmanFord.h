@@ -3,6 +3,7 @@
 
 #include "traversalAlgorithm.h"
 #include <vector>
+#include <tuple>
 
 using std::vector;
 using std::pair;
@@ -10,11 +11,16 @@ using std::pair;
 class BellmanFord : public TraversalAlgorithm {
 private:
     const vector<vector<pair<int, int>>>& graph;
+    vector<std::tuple<int, int, int>> edges;
     vector<long long> distances;
     bool finished;
-    int currentStepIndex = -1;
     vector<Step> history;
+
+    int currentStepIndex = -1;
     int start;
+    int vertices;
+    int currentPhase;
+    int currentEdgeIndex;
 
 public:
     BellmanFord(const vector<vector<pair<int, int>>>& adj, int startNode);
