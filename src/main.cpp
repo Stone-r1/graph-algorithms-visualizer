@@ -161,7 +161,7 @@ int main() {
 
         BeginDrawing();
             ClearBackground(WHITE);
-            sidebar.draw(GetScreenHeight()); 
+            sidebar.draw(); 
             board.drawEdges();
             board.drawNodes();
             if (board.isGraphWeighted()) {
@@ -186,4 +186,3 @@ int main() {
 
     CloseWindow();
 }
-

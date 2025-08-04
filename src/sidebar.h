@@ -18,9 +18,10 @@ struct Button {
 
 class Sidebar {
 private:
-    int x;
-    int width;
-    int height;
+    float x;
+    float width;
+    float height;
+    float ystart;
 
     std::vector<Button> buttons;
     std::vector<Button> radiuses;
@@ -28,7 +29,7 @@ private:
 public:
     Sidebar(int screenHeight); 
 
-    void draw(int screenHeight);
+    void draw();
     void handleMouse(Vector2 mousePosition);
     bool isInSidebarDomain(Vector2 mousePosition, float currentRadius);
 
