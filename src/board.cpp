@@ -285,6 +285,21 @@ void Board::runDijkstra(const Vector2& startNodePosition) {
     }
 }
 
+void Board::runBellmanFord(const Vector2& startNodePosition) {
+    if (!isGraphWeighted()) {
+        std::cout << "Graph must be weighted to run dijkstra\n";
+        return;
+    }
+
+    Node* startNode = findNodeFromPosition(startNodePosition);
+    if (startNode) {
+        resetRunning();
+        startNodeIndex = -1;
+        currentAlgo = std::make_unique<BellmanFord>(graph, startNode->getNodeIndex());
+        isRunning = true;
+    }
+}
+
 void Board::highlightNode(const int& index) {
     if (index >= 0 && index < nodes.size() && nodes[index].isNodeValid()) {
         nodes[index].setHighlight();

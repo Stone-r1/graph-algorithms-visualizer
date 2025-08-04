@@ -67,6 +67,12 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
             return;
         }
 
+        if (sidebar.isButtonClicked("Bellman-Ford")) {
+            board.runBellmanFord(startNode);
+            sidebar.resetClicks();
+            return;
+        }
+
         if (sidebar.isButtonClicked("Weighted")) {
             if (!board.isGraphEmpty()) {
                 return; // can't flip the graph weight if edges were added.
@@ -171,3 +177,4 @@ int main() {
 
     CloseWindow();
 }
+
