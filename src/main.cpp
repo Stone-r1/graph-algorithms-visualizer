@@ -23,6 +23,13 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
         return;
     }
 
+    std::optional<Vector2> nodePosition = board.isInNodeDomain(mouse);
+    if (nodePosition) {
+        std::cout << "deleted a node\n";
+        board.removeNode(*nodePosition);
+        return;
+    }
+
     if (!sidebar.isInSidebarDomain(mouse, radius)) {
         board.addNode(mouse, radius);
     } else {
