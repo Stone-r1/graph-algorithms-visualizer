@@ -10,16 +10,6 @@ struct Step {
     long long distance;
 };
 
-struct BellmanStep : Step {
-    bool relaxed;
-    BellmanStep(int from, int to, long long distance, bool relaxed) :
-        Step{from, to, distance}, relaxed(relaxed) {}
-
-    Step toStep() const {
-        return Step{from, to, distance};
-    }
-};
-
 class TraversalAlgorithm {
 public:
 

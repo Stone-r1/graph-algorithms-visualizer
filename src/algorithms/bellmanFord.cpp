@@ -9,7 +9,7 @@ BellmanFord::BellmanFord(const vector<vector<pair<int, int>>>& adj, int startNod
 {
     vertices = graph.size();
     distances[startNode] = 0;
-    history.push_back({startNode, startNode, 0, true});
+    history.push_back({startNode, startNode, 0});
 
     // flatten edges
     for (int node = 0; node < vertices; node++) {
@@ -50,10 +50,10 @@ Step BellmanFord::stepForward() {
     }
 
     if (relaxed) { 
-        BellmanStep step = BellmanStep({node, neighbor, distances[neighbor], relaxed});
+        Step step = Step({node, neighbor, distances[neighbor]});
         history.push_back(step);
         currentStepIndex++;
-        return step.toStep();
+        return step;
     } else {
         return stepForward();
     }
@@ -64,7 +64,7 @@ Step BellmanFord::stepBackward() {
         return {-1, -1, -1};
     }
     
-    return history[--currentStepIndex].toStep();
+    return history[--currentStepIndex];
 }
 
 bool BellmanFord::isFinished() const {
@@ -80,7 +80,7 @@ int BellmanFord::getTotalSteps() const {
 }
 
 Step BellmanFord::getHistory(int index) const {
-    return history[index].toStep();
+    return history[index];
 }
 
 int BellmanFord::getStartNode() const {
