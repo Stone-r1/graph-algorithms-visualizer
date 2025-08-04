@@ -41,14 +41,14 @@ Node* Board::findNodeFromPosition(const Vector2& firstNodePosition) {
     return nullptr;
 }
 
-Vector2 Board::isInNodeDomain(const Vector2& mousePosition) {
+std::optional<Vector2> Board::isInNodeDomain(const Vector2& mousePosition) {
     for (const Node& node : nodes) {
         if (node.isNodeValid() && node.isInRadiusDomain(mousePosition)) {
             return node.getNodePosition();
         }
     }
 
-    return {0.0f, 0.0f};
+    return std::nullopt;
 }
 
 void Board::addNode(const Vector2& mousePosition, const float& currentRadius) {

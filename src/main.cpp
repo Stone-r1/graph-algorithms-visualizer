@@ -1,5 +1,6 @@
 #include "board.h"
 #include <iostream>
+#include <optional>
 #include "raylib.h"
 #include "sidebar.h"
 
@@ -8,7 +9,8 @@
 #define LARGE 70.0f
 
 float radius = MEDIUM;
-static Vector2 firstNode = {-1, -1}, lastNode = {-1, -1};
+static std::optional<Vector2> firstNode = std::nullopt;
+static std::optional<Vector2> lastNode = std::nullopt;
 static Vector2 startNode;
 static bool weightBox = false;
 
@@ -17,7 +19,7 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
         return;
     }
 
-    if (weightBox) {
+    if (weightBox || board.isAlgorithmRunning()) {
         return;
     }
 
@@ -92,23 +94,23 @@ void handleRightClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
         return; 
     }
 
-    if (weightBox) {
+    if (weightBox || board.isAlgorithmRunning()) {
         return;
     }
 
-    Vector2 nodePosition = board.isInNodeDomain(mouse);
-    if (nodePosition.x == 0.0f && nodePosition.y == 0.0f) {
+    std::optional<Vector2> nodePosition = board.isInNodeDomain(mouse);
+    if (!nodePosition) {
         return;
-    }
-
-    if (firstNode.x == -1) {
+    } 
+    
+    if (!firstNode) {
         firstNode = nodePosition;
         std::cout << "Node 1 was chosen successfully\n";
-    } else if (firstNode.x == nodePosition.x && firstNode.y == nodePosition.y) {
+    } else if (firstNode->x == nodePosition->x && firstNode->y == nodePosition->y) {
         // so basically If you clicked on the same node twice
         std::cout << "Selected the starting node.\n";
-        startNode = firstNode;
-        firstNode = {-1, -1};
+        startNode = *firstNode;
+        firstNode = std::nullopt;
         board.highlightStartingNode(startNode);
     } else {
         lastNode = nodePosition;
@@ -116,9 +118,9 @@ void handleRightClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
             weightBox = true;
         } else {
             std::cout << "Added the edge between Node 1 and Node2\n";
-            board.addEdge(firstNode, lastNode, 1);
-            firstNode = {-1, -1}; 
-            lastNode = firstNode;
+            board.addEdge(*firstNode, *lastNode, 1);
+            firstNode = std::nullopt; 
+            lastNode = std::nullopt;
         }
     }
 }
@@ -152,7 +154,7 @@ int main() {
 
         BeginDrawing();
             ClearBackground(WHITE);
-            sidebar.draw(); 
+            sidebar.draw(GetScreenHeight()); 
             board.drawEdges();
             board.drawNodes();
             if (board.isGraphWeighted()) {
@@ -163,11 +165,11 @@ int main() {
                 board.askForWeight();
                 if (board.isWeightReady()) {
                     int weight = board.getCurrentWeight();
-                    board.addEdge(firstNode, lastNode, weight);
+                    board.addEdge(*firstNode, *lastNode, weight);
 
                     weightBox = false;
-                    firstNode = {-1, -1};
-                    lastNode = firstNode;
+                    firstNode = std::nullopt;
+                    lastNode = std::nullopt;
                     board.setWeightReady();
                 }
             }

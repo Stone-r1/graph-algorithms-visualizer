@@ -3,6 +3,7 @@
 #include <set>
 #include <unordered_map>
 #include <memory>
+#include <optional>
 
 #include "raylib.h"
 #include "node.h"
@@ -43,7 +44,7 @@ public:
 
     void clear();
 
-    Vector2 isInNodeDomain(const Vector2& mousePosition);
+    std::optional<Vector2> isInNodeDomain(const Vector2& mousePosition);
 
     void addNode(const Vector2& mousePosition, const float& currentRadius);
     void addEdge(const Vector2& firstNodePosition, const Vector2& secondNodePosition, int weight = 1);
