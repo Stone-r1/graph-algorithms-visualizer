@@ -14,7 +14,7 @@ private:
     vector<std::tuple<int, int, int>> edges;
     vector<long long> distances;
     bool finished;
-    vector<Step> history;
+    vector<BellmanStep> history;
 
     int currentStepIndex = -1;
     int start;
