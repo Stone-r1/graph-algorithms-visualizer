@@ -12,7 +12,7 @@ DFS::DFS(const vector<vector<pair<int, int>>>& adj, int startNode) :
 
 Step DFS::stepForward() {
     if (finished) {
-        return {-1, -1, -1};
+        return Step::invalidStep();
     } 
     
     if (currentStepIndex + 1 < history.size()) {
@@ -21,7 +21,7 @@ Step DFS::stepForward() {
 
     if (st.empty()) {
         finished = true;
-        return {-1, -1, -1};
+        return Step::invalidStep();
     }
 
     auto [parent, node] = st.top();
@@ -42,7 +42,7 @@ Step DFS::stepForward() {
 
 Step DFS::stepBackward() {
     if (currentStepIndex < 0) {
-        return {-1, -1, -1};
+        return Step::invalidStep();
     }
     
     return history[currentStepIndex--]; 

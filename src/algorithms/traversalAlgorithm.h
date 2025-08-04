@@ -8,6 +8,14 @@ struct Step {
     int from;
     int to;
     long long distance;
+
+    static Step invalidStep() {
+        return Step{-1, -1, -1};
+    }
+
+    bool isValid() const {
+        return from != -1 && to != -1 && distance != -1;
+    }
 };
 
 class TraversalAlgorithm {

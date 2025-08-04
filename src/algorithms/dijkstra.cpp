@@ -19,7 +19,7 @@ Step Dijkstra::stepForward() {
     }
 
     if (finished) {
-        return {-1, -1, -1};
+        return Step::invalidStep();
     }
 
     while (!pq.empty()) {
@@ -49,12 +49,12 @@ Step Dijkstra::stepForward() {
     }
 
     finished = true;
-    return {-1, -1, -1};
+    return Step::invalidStep();
 }
 
 Step Dijkstra::stepBackward() {
     if (currentStepIndex <= 0) {
-        return {-1, -1, -1};
+        return Step::invalidStep();
     }
     
     return history[--currentStepIndex]; 

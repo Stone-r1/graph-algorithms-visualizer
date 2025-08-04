@@ -247,6 +247,7 @@ void Board::resetRunning() {
     isRunning = false;
     weightReady = false;
     isEnteringWeight = false;
+    startNodeIndex = -1;
     std::fill(std::begin(weightInput), std::end(weightInput), '\0');
 }
 
@@ -254,7 +255,6 @@ void Board::runBFS(const Vector2& startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
-        startNodeIndex = -1;
         currentAlgo = std::make_unique<BFS>(graph, startNode->getNodeIndex());
         isRunning = true;
     }
@@ -264,7 +264,6 @@ void Board::runDFS(const Vector2& startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
-        startNodeIndex = -1;
         currentAlgo = std::make_unique<DFS>(graph, startNode->getNodeIndex());
         isRunning = true;
     }
@@ -279,7 +278,6 @@ void Board::runDijkstra(const Vector2& startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
-        startNodeIndex = -1;
         currentAlgo = std::make_unique<Dijkstra>(graph, startNode->getNodeIndex());
         isRunning = true;
     }
@@ -294,7 +292,6 @@ void Board::runBellmanFord(const Vector2& startNodePosition) {
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
-        startNodeIndex = -1;
         currentAlgo = std::make_unique<BellmanFord>(graph, startNode->getNodeIndex());
         isRunning = true;
     }
@@ -343,8 +340,10 @@ void Board::resetHighlights() {
 
 void Board::stepForward() {
     if (currentAlgo && !currentAlgo->isFinished()) {
-        auto [from, to, weight] = currentAlgo->stepForward();
-        if (from != -1) { 
+        auto step = currentAlgo->stepForward();
+        if (step.isValid()) { 
+            auto [from, to, weight] = step;
+
             if (isGraphWeighted()) {
                 highlightWeight(to, weight);
             }

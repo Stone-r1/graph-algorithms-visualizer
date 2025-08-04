@@ -26,11 +26,11 @@ Step BellmanFord::stepForward() {
 
     if (currentPhase >= vertices - 1) {
         finished = true;
-        return {-1, -1, -1};
+        return Step::invalidStep();
     }
 
     if (finished) {
-        return {-1, -1, -1};
+        return Step::invalidStep();
     } 
 
     auto [node, neighbor, weight] = edges[currentEdgeIndex];
@@ -61,7 +61,7 @@ Step BellmanFord::stepForward() {
 
 Step BellmanFord::stepBackward() {
     if (currentStepIndex <= 0) {
-        return {-1, -1, -1};
+        return Step::invalidStep();
     }
     
     return history[--currentStepIndex];
