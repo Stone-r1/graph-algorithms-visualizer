@@ -19,11 +19,11 @@ BellmanFord::BellmanFord(const vector<vector<pair<int, int>>>& adj, int startNod
     }
 }
 
-Step BellmanFord::stepForward() {  
+Step BellmanFord::stepForward() {
     if (currentStepIndex + 1 < history.size()) {
         return history[++currentStepIndex];
     }
-
+    
     if (currentPhase >= vertices - 1) {
         finished = true;
         return Step::invalidStep();
@@ -31,32 +31,33 @@ Step BellmanFord::stepForward() {
 
     if (finished) {
         return Step::invalidStep();
-    } 
-
-    auto [node, neighbor, weight] = edges[currentEdgeIndex];
-    bool relaxed = false;
-    if (distances[node] != MAX_VALUE && distances[node] + weight < distances[neighbor]) {
-        distances[neighbor] = distances[node] + weight;
-        relaxed = true;
     }
+    
+    while (currentEdgeIndex < edges.size()) {
+        auto [node, neighbor, weight] = edges[currentEdgeIndex];
+        currentEdgeIndex++;
 
-    if (++currentEdgeIndex >= edges.size()) {
-        currentEdgeIndex = 0;
-        currentPhase++;
+        if (distances[node] != MAX_VALUE && distances[node] + weight < distances[neighbor]) {
+            distances[neighbor] = distances[node] + weight;
+            
+            Step step = Step({node, neighbor, distances[neighbor]});
+            history.push_back(step);
+            currentStepIndex++;
+            
+            if (currentEdgeIndex >= edges.size()) {
+                currentEdgeIndex = 0;
+                currentPhase++;
+            }
+            return step;
+        }
     }
-
-    if (currentPhase >= vertices - 1) {
+    
+    currentEdgeIndex = 0;
+    if (++currentPhase >= vertices - 1) {
         finished = true;
     }
-
-    if (relaxed) { 
-        Step step = Step({node, neighbor, distances[neighbor]});
-        history.push_back(step);
-        currentStepIndex++;
-        return step;
-    } else {
-        return stepForward();
-    }
+    
+    return Step::invalidStep();
 }
 
 Step BellmanFord::stepBackward() {
