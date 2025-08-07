@@ -30,6 +30,7 @@ void Board::clear() {
 
     graph.resize(MAX_NODES);
     nodes.assign(MAX_NODES, Node::makeInvalidNode());
+    edges = 0;
 }
 
 Node* Board::findNodeFromPosition(const Vector2& firstNodePosition) {
