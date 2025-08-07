@@ -46,7 +46,9 @@ public:
     bool isButtonClicked(const std::string& label);
     RadiusSize getSelectedRadiusSize() const;
     float getSelectedRadius() const;
+    void flipGraphWeight();
     void resetClicks();
+    void resetClicks(const std::string& label); // reset everything but the one with label
 };
 
 #endif

@@ -3,6 +3,7 @@
 #include <optional>
 #include "raylib.h"
 #include "sidebar.h"
+#include "constants.h"
 
 float radius;
 static std::optional<Vector2> firstNode = std::nullopt;
@@ -31,37 +32,53 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
     } else {
         sidebar.handleMouse(mouse);
 
-        if (sidebar.isButtonClicked("Clear")) {
+        if (sidebar.isButtonClicked(SidebarLabelNames::Clear)) {
             board.clear();
             sidebar.resetClicks();
             return;
         }
         
-        if (sidebar.isButtonClicked("BFS")) {
-            board.runBFS(startNode);
+        if (sidebar.isButtonClicked(SidebarLabelNames::BFS)) {
+            if (board.runBFS(startNode)) {
+                sidebar.resetClicks(SidebarLabelNames::BFS);
+            }
+
             return;
         }
 
-        if (sidebar.isButtonClicked("DFS")) {
-            board.runDFS(startNode);
+        if (sidebar.isButtonClicked(SidebarLabelNames::DFS)) {
+            if (board.runDFS(startNode)) {
+                sidebar.resetClicks(SidebarLabelNames::DFS);
+            }
+
             return;
         }
 
-        if (sidebar.isButtonClicked("Dijkstra")) {
-            board.runDijkstra(startNode);
+        if (sidebar.isButtonClicked(SidebarLabelNames::Dijkstra)) {
+            if (!board.runDijkstra(startNode)) {
+                sidebar.resetClicks(SidebarLabelNames::Dijkstra);
+            }
+
             return;
         }
 
-        if (sidebar.isButtonClicked("Bellman-Ford")) {
-            board.runBellmanFord(startNode);
+        if (sidebar.isButtonClicked(SidebarLabelNames::BellmanFord)) {
+            if (board.runBellmanFord(startNode)) {
+                sidebar.resetClicks(SidebarLabelNames::BellmanFord);
+            }
+
             return;
         }
 
-        if (sidebar.isButtonClicked("Weighted")) {
+        if (sidebar.isButtonClicked(SidebarLabelNames::Weighted)) {
             if (!board.isGraphEmpty()) {
                 return; // can't flip the graph weight if edges were added.
             } else {
                 board.flipGraphWeight();
+                if (!board.isGraphWeighted()) {
+                    sidebar.flipGraphWeight();
+                }
+
                 std::cout << "karoche graph weight is now set to " << (board.isGraphWeighted() ? "true\n" : "false\n");
             }
 
@@ -135,6 +152,7 @@ int main() {
 
         if (IsKeyPressed(KEY_R)) {
             board.resetRunning();
+            sidebar.resetClicks();
         }
 
         BeginDrawing();
@@ -164,4 +182,3 @@ int main() {
 
     CloseWindow();
 }
-

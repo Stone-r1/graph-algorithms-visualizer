@@ -1,5 +1,4 @@
 #include <vector>
-#include <queue>
 #include <set>
 #include <unordered_map>
 #include <memory>
@@ -53,10 +52,10 @@ public:
     void clearGraph();
 
     // ==== algorithms ====
-    void runBFS(const Vector2& startNodePosition);
-    void runDFS(const Vector2& startNodePosition);
-    void runDijkstra(const Vector2& startNodePosition);
-    void runBellmanFord(const Vector2& startNodePosition);
+    bool runBFS(const Vector2& startNodePosition);
+    bool runDFS(const Vector2& startNodePosition);
+    bool runDijkstra(const Vector2& startNodePosition);
+    bool runBellmanFord(const Vector2& startNodePosition);
 
     void stepForward();
     void stepBackward();

@@ -256,10 +256,10 @@ bool Board::isAlgorithmRunning() const {
     return isRunning;
 }
 
-void Board::runBFS(const Vector2& startNodePosition) {
+bool Board::runBFS(const Vector2& startNodePosition) {
     if (isGraphWeighted()) {
         std::cout << "Graph should be not be weighted to run BFS\n";
-        return;
+        return false;
     }
 
     Node* startNode = findNodeFromPosition(startNodePosition);
@@ -267,13 +267,16 @@ void Board::runBFS(const Vector2& startNodePosition) {
         resetRunning();
         currentAlgo = std::make_unique<BFS>(graph, startNode->getNodeIndex());
         isRunning = true;
+        return true;
     }
+
+    return false;
 }
 
-void Board::runDFS(const Vector2& startNodePosition) {
+bool Board::runDFS(const Vector2& startNodePosition) {
     if (isGraphWeighted()) {
         std::cout << "Graph should be not be weighted to run DFS\n";
-        return;
+        return false;
     }
 
     Node* startNode = findNodeFromPosition(startNodePosition);
@@ -281,13 +284,16 @@ void Board::runDFS(const Vector2& startNodePosition) {
         resetRunning();
         currentAlgo = std::make_unique<DFS>(graph, startNode->getNodeIndex());
         isRunning = true;
+        return true;
     }
+
+    return false;
 }
 
-void Board::runDijkstra(const Vector2& startNodePosition) {
+bool Board::runDijkstra(const Vector2& startNodePosition) {
     if (!isGraphWeighted()) {
         std::cout << "Graph must be weighted to run dijkstra\n";
-        return;
+        return false;;
     }
 
     Node* startNode = findNodeFromPosition(startNodePosition);
@@ -295,13 +301,16 @@ void Board::runDijkstra(const Vector2& startNodePosition) {
         resetRunning();
         currentAlgo = std::make_unique<Dijkstra>(graph, startNode->getNodeIndex());
         isRunning = true;
+        return true;
     }
+
+    return false;
 }
 
-void Board::runBellmanFord(const Vector2& startNodePosition) {
+bool Board::runBellmanFord(const Vector2& startNodePosition) {
     if (!isGraphWeighted()) {
         std::cout << "Graph must be weighted to run dijkstra\n";
-        return;
+        return false;
     }
 
     Node* startNode = findNodeFromPosition(startNodePosition);
@@ -309,7 +318,10 @@ void Board::runBellmanFord(const Vector2& startNodePosition) {
         resetRunning();
         currentAlgo = std::make_unique<BellmanFord>(graph, startNode->getNodeIndex());
         isRunning = true;
+        return true;
     }
+
+    return false;
 }
 
 void Board::highlightNode(const int& index) {

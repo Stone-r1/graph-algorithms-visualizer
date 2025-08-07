@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "sidebar.h"
+#include "constants.h"
 #include <vector>
 #include <iostream>
 #include <string>
@@ -19,9 +20,9 @@ static const std::map<RadiusSize, float> RadiusValues = {
 };
 
 static RadiusSize labelToRadiusEnum(const std::string& label) {
-    if (label == "S") return RadiusSize::Small;
-    if (label == "M") return RadiusSize::Medium;
-    if (label == "L") return RadiusSize::Large;
+    if (label == SidebarLabelNames::Small) return RadiusSize::Small;
+    if (label == SidebarLabelNames::Medium) return RadiusSize::Medium;
+    if (label == SidebarLabelNames::Large) return RadiusSize::Large;
     return RadiusSize::None;
 }
 
@@ -36,7 +37,14 @@ Sidebar::Sidebar(int screenHeight) :
     float buttonX = x + (width - buttonWidth) / 2;
     float yOffset = ystart + 3 * margin;
 
-    std::vector<std::string> labels = {"Clear", "Weighted", "DFS", "BFS", "Dijkstra", "Bellman-Ford"};
+    std::vector<std::string> labels = {
+        SidebarLabelNames::Clear,
+        SidebarLabelNames::Weighted,
+        SidebarLabelNames::DFS,
+        SidebarLabelNames::BFS,
+        SidebarLabelNames::Dijkstra,
+        SidebarLabelNames::BellmanFord
+    };
 
     for (const auto& label : labels) {
         buttons.emplace_back(Rectangle{buttonX + margin, yOffset, buttonWidth, buttonHeight}, label);
@@ -45,7 +53,11 @@ Sidebar::Sidebar(int screenHeight) :
 
     topButtons = yOffset;
     yOffset += 2.5 * margin;
-    std::vector<std::string> radiusLabels = {"S", "M", "L"};
+    std::vector<std::string> radiusLabels = {
+        SidebarLabelNames::Small,
+        SidebarLabelNames::Medium,
+        SidebarLabelNames::Large
+    };
 
     buttonWidth = (width - 4 * margin) / 3.0f;  // 3 buttons + 2 gaps = 4 margins
     float totalWidth = 3 * buttonWidth + 2 * margin;
@@ -55,7 +67,7 @@ Sidebar::Sidebar(int screenHeight) :
     for (int i = 0; i < radiusLabels.size(); ++i) {
         float buttonX = baseX + i * (buttonWidth + margin);
         radiuses.emplace_back(Rectangle{buttonX, radiusY, buttonWidth, buttonHeight}, radiusLabels[i]);
-        if (radiusLabels[i] == "M") {
+        if (radiusLabels[i] == SidebarLabelNames::Medium) {
             // default value
             radiuses[i].isClicked = true;
         }
@@ -103,7 +115,7 @@ void Sidebar::handleMouse(Vector2 mousePosition) {
     for (auto& button : buttons) {
         const Rectangle& rect = button.domain;
 
-        if (button.getButtonLabel() != "Weighted") {
+        if (button.getButtonLabel() != SidebarLabelNames::Weighted) {
             button.isClicked = false;
         }
 
@@ -163,6 +175,15 @@ RadiusSize Sidebar::getSelectedRadiusSize() const {
     return RadiusSize::None;
 }
 
+void Sidebar::flipGraphWeight() {
+    for (auto& button : buttons) {
+        if (button.getButtonLabel() == SidebarLabelNames::Weighted) {
+            button.isClicked = !button.isClicked;
+            return;
+        }
+    }
+}
+
 float Sidebar::getSelectedRadius() const {
     RadiusSize selected = getSelectedRadiusSize();
     auto it = RadiusValues.find(selected);
@@ -171,7 +192,7 @@ float Sidebar::getSelectedRadius() const {
 
 void Sidebar::resetClicks() {
     for (auto& button : radiuses) {
-        if (button.getButtonLabel() == "M") {
+        if (button.getButtonLabel() == SidebarLabelNames::Medium) {
             button.isClicked = true;
             continue;
         }
@@ -180,6 +201,30 @@ void Sidebar::resetClicks() {
     } 
 
     for (auto& button : buttons) {
+        button.isClicked = false;
+    }
+}
+
+void Sidebar::resetClicks(const std::string& label) {
+    for (auto& button : radiuses) {
+        if (button.getButtonLabel() == SidebarLabelNames::Medium) {
+            button.isClicked = true;
+            continue;
+        }
+
+        button.isClicked = false;
+    } 
+
+    for (auto& button : buttons) {
+        if (button.getButtonLabel() == label) {
+            button.isClicked = true;
+            continue;
+        }
+
+        if (button.getButtonLabel() == SidebarLabelNames::Weighted) {
+            continue;
+        }
+
         button.isClicked = false;
     }
 }
