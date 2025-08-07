@@ -256,6 +256,11 @@ bool Board::isAlgorithmRunning() const {
 }
 
 void Board::runBFS(const Vector2& startNodePosition) {
+    if (isGraphWeighted()) {
+        std::cout << "Graph should be not be weighted to run BFS\n";
+        return;
+    }
+
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
@@ -265,6 +270,11 @@ void Board::runBFS(const Vector2& startNodePosition) {
 }
 
 void Board::runDFS(const Vector2& startNodePosition) {
+    if (isGraphWeighted()) {
+        std::cout << "Graph should be not be weighted to run DFS\n";
+        return;
+    }
+
     Node* startNode = findNodeFromPosition(startNodePosition);
     if (startNode) {
         resetRunning();
