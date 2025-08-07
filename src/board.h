@@ -7,10 +7,10 @@
 
 #include "raylib.h"
 #include "node.h"
-#include "algorithms/bfs.h"
-#include "algorithms/dfs.h"
-#include "algorithms/dijkstra.h"
-#include "algorithms/bellmanFord.h"
+#include "algorithms/BFS/bfs.h"
+#include "algorithms/DFS/dfs.h"
+#include "algorithms/Dijkstra/dijkstra.h"
+#include "algorithms/Bellman-Ford/bellmanFord.h"
 using std::vector;
 
 

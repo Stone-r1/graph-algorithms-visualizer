@@ -10,13 +10,17 @@ set(SOURCES
     src/board.cpp
     src/node.cpp
     src/sidebar.cpp
-    src/algorithms/bfs.cpp
-    src/algorithms/dfs.cpp
-    src/algorithms/dijkstra.cpp
-    src/algorithms/bellmanFord.cpp
+
+    src/algorithms/BFS/bfs.cpp
+    src/algorithms/DFS/dfs.cpp
+    src/algorithms/Dijkstra/dijkstra.cpp
+    src/algorithms/Bellman-Ford/bellmanFord.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE src)
+target_include_directories(${PROJECT_NAME} PRIVATE 
+    src
+    src/algorithms
+)
 target_link_libraries(${PROJECT_NAME} raylib)
