@@ -3,9 +3,27 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <map>
+
+inline constexpr float SMALL = 30.0f;
+inline constexpr float MEDIUM = 50.0f;
+inline constexpr float LARGE = 70.0f;
 
 const float margin = 10.0f;
 float topButtons;
+
+static const std::map<RadiusSize, float> RadiusValues = {
+    {RadiusSize::Small, SMALL},
+    {RadiusSize::Medium, MEDIUM},
+    {RadiusSize::Large, LARGE}
+};
+
+static RadiusSize labelToRadiusEnum(const std::string& label) {
+    if (label == "S") return RadiusSize::Small;
+    if (label == "M") return RadiusSize::Medium;
+    if (label == "L") return RadiusSize::Large;
+    return RadiusSize::None;
+}
 
 Sidebar::Sidebar(int screenHeight) :
     x(0), 
@@ -37,6 +55,10 @@ Sidebar::Sidebar(int screenHeight) :
     for (int i = 0; i < radiusLabels.size(); ++i) {
         float buttonX = baseX + i * (buttonWidth + margin);
         radiuses.emplace_back(Rectangle{buttonX, radiusY, buttonWidth, buttonHeight}, radiusLabels[i]);
+        if (radiusLabels[i] == "M") {
+            // default value
+            radiuses[i].isClicked = true;
+        }
     }
 
     yOffset += buttonHeight + margin; 
@@ -51,7 +73,7 @@ void Sidebar::draw() {
     DrawRectangleRoundedLinesEx(temp, 0.2f, 1, 5, DARKGRAY);
 
     for (const auto& button : buttons) {
-        DrawRectangleRec(button.domain, LIGHTGRAY);
+        DrawRectangleRec(button.domain, isButtonClicked(button.getButtonLabel()) ? GREEN : LIGHTGRAY);
         DrawRectangleLinesEx(button.domain, 2, DARKGRAY);
         int textWidth = MeasureText(button.label.c_str(), 18);
         DrawText(button.label.c_str(),
@@ -63,14 +85,14 @@ void Sidebar::draw() {
     DrawLineEx({x + 3 * margin, topButtons + margin}, {(float)width - margin - margin / 2, topButtons + margin}, 5.0f, DARKGRAY);
 
     for (const auto& button : radiuses) {
-        DrawRectangleRec(button.domain, LIGHTGRAY);
+        DrawRectangleRec(button.domain, isButtonClicked(button.getButtonLabel()) ? GREEN : LIGHTGRAY);
         DrawRectangleLinesEx(button.domain, 2, DARKGRAY);
         int textWidth = MeasureText(button.label.c_str(), 18);
         DrawText(button.label.c_str(),
                  button.domain.x + (button.domain.width - textWidth) / 2,
                  button.domain.y + (button.domain.height - 18) / 2,
                  18, BLACK);
-    } 
+    }
 }
 
 void Sidebar::handleMouse(Vector2 mousePosition) {
@@ -79,25 +101,31 @@ void Sidebar::handleMouse(Vector2 mousePosition) {
     }
 
     for (auto& button : buttons) {
-        button.isClicked = false;
-    }
-
-    for (auto& button : buttons) {
         const Rectangle& rect = button.domain;
-        button.isClicked = false;
-        if (mousePosition.x > rect.x && mousePosition.x < rect.x + rect.width &&
-            mousePosition.y > rect.y && mousePosition.y < rect.y + rect.height) {
+
+        if (button.getButtonLabel() != "Weighted") {
+            button.isClicked = false;
+        }
+
+        if (CheckCollisionPointRec(mousePosition, rect)) {
             std::cout << "Is In Domain of " << button.label << '\n';
             button.isClicked = true;
+            return;
         }
-    } 
+    }
 
     for (auto& button : radiuses) {
         const Rectangle& rect = button.domain;
-        if (mousePosition.x > rect.x && mousePosition.x < rect.x + rect.width &&
-            mousePosition.y > rect.y && mousePosition.y < rect.y + rect.height) {
+        button.isClicked = false;
+        if (CheckCollisionPointRec(mousePosition, rect)) {
             std::cout << "Is In Domain of " << button.label << '\n';
+
+            for (auto& b : radiuses) {
+                b.isClicked = false;
+            }
+
             button.isClicked = true;
+            return;
         }
     }
 }
@@ -125,8 +153,29 @@ bool Sidebar::isButtonClicked(const std::string& label) {
     return false;
 }
 
+RadiusSize Sidebar::getSelectedRadiusSize() const {
+    for (const auto& button : radiuses) {
+        if (button.isClicked) {
+            return labelToRadiusEnum(button.getButtonLabel());
+        }
+    }
+
+    return RadiusSize::None;
+}
+
+float Sidebar::getSelectedRadius() const {
+    RadiusSize selected = getSelectedRadiusSize();
+    auto it = RadiusValues.find(selected);
+    return (it != RadiusValues.end() ? it->second : 0.0f);
+}
+
 void Sidebar::resetClicks() {
     for (auto& button : radiuses) {
+        if (button.getButtonLabel() == "M") {
+            button.isClicked = true;
+            continue;
+        }
+
         button.isClicked = false;
     } 
 

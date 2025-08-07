@@ -405,11 +405,14 @@ void Board::askForWeight() {
     DrawRectangleRec(box, color);
     DrawRectangleLinesEx(box, 2, BLACK);
     DrawText(weightInput, box.x + 10, box.y + 15, 30, DARKGRAY);
-    int key = GetCharPressed();
 
+    int key = GetCharPressed();
     while (key > 0) {
         if (isdigit(key) && weightDigitCount < 9) {
             weightInput[weightDigitCount++] = (char)key;
+            weightInput[weightDigitCount] = '\0';
+        } else if (key == '-' && !weightDigitCount) {
+            weightInput[weightDigitCount++] = '-';
             weightInput[weightDigitCount] = '\0';
         }
 

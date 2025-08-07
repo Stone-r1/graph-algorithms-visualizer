@@ -4,11 +4,7 @@
 #include "raylib.h"
 #include "sidebar.h"
 
-#define SMALL 30.0f
-#define MEDIUM 50.0f
-#define LARGE 70.0f
-
-float radius = MEDIUM;
+float radius;
 static std::optional<Vector2> firstNode = std::nullopt;
 static std::optional<Vector2> lastNode = std::nullopt;
 static Vector2 startNode;
@@ -37,48 +33,27 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
 
         if (sidebar.isButtonClicked("Clear")) {
             board.clear();
-            return;
-        }
-
-        if (sidebar.isButtonClicked("Small")) {
-            radius = SMALL;
-            sidebar.resetClicks();
-            return;
-        }
-
-        if (sidebar.isButtonClicked("Medium")) {
-            radius = MEDIUM; 
-            sidebar.resetClicks();
-            return;
-        }
-
-        if (sidebar.isButtonClicked("Large")) {
-            radius = LARGE;
             sidebar.resetClicks();
             return;
         }
         
         if (sidebar.isButtonClicked("BFS")) {
             board.runBFS(startNode);
-            sidebar.resetClicks();
             return;
         }
 
         if (sidebar.isButtonClicked("DFS")) {
             board.runDFS(startNode);
-            sidebar.resetClicks();
             return;
         }
 
         if (sidebar.isButtonClicked("Dijkstra")) {
             board.runDijkstra(startNode);
-            sidebar.resetClicks();
             return;
         }
 
         if (sidebar.isButtonClicked("Bellman-Ford")) {
             board.runBellmanFord(startNode);
-            sidebar.resetClicks();
             return;
         }
 
@@ -90,7 +65,6 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
                 std::cout << "karoche graph weight is now set to " << (board.isGraphWeighted() ? "true\n" : "false\n");
             }
 
-            sidebar.resetClicks();
             return;
         }
     } 
@@ -147,6 +121,10 @@ int main() {
         handleLeftClick(board, sidebar, mouse);
         handleRightClick(board, sidebar, mouse);
 
+        // Sync radius with currently selected sidebar option
+        radius = sidebar.getSelectedRadius();
+
+
         if (IsKeyPressed(KEY_RIGHT)) {
             board.stepForward();
         }
@@ -186,3 +164,4 @@ int main() {
 
     CloseWindow();
 }
+

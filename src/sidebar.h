@@ -13,8 +13,18 @@ struct Button {
 
     Button(Rectangle rect, const std::string& str)
         : domain(rect), label(str), isClicked(false) {}
+
+    std::string getButtonLabel() const {
+        return label;
+    }
 };
 
+enum class RadiusSize {
+    Small,
+    Medium,
+    Large,
+    None
+};
 
 class Sidebar {
 private:
@@ -34,6 +44,8 @@ public:
     bool isInSidebarDomain(Vector2 mousePosition, float currentRadius);
 
     bool isButtonClicked(const std::string& label);
+    RadiusSize getSelectedRadiusSize() const;
+    float getSelectedRadius() const;
     void resetClicks();
 };
 
