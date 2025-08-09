@@ -80,7 +80,7 @@ Colorscheme:
 4. **Run the Application**
    After a successful build, locate and execute the generated binary, typically found in the build directory:
    ```bash
-   ./GraphAlgorithmsVisualizer
+   ./graph
    ```
 
 ---
