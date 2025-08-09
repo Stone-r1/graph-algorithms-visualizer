@@ -39,16 +39,16 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
         }
         
         if (sidebar.isButtonClicked(SidebarLabelNames::BFS)) {
-            if (board.runBFS(startNode)) {
-                sidebar.resetClicks(SidebarLabelNames::BFS);
+            if (!board.runBFS(startNode)) {
+                sidebar.resetClick(SidebarLabelNames::BFS);
             }
 
             return;
         }
 
         if (sidebar.isButtonClicked(SidebarLabelNames::DFS)) {
-            if (board.runDFS(startNode)) {
-                sidebar.resetClicks(SidebarLabelNames::DFS);
+            if (!board.runDFS(startNode)) {
+                sidebar.resetClick(SidebarLabelNames::DFS);
             }
 
             return;
@@ -56,21 +56,22 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
 
         if (sidebar.isButtonClicked(SidebarLabelNames::Dijkstra)) {
             if (!board.runDijkstra(startNode)) {
-                sidebar.resetClicks(SidebarLabelNames::Dijkstra);
+                sidebar.resetClick(SidebarLabelNames::Dijkstra);
             }
 
             return;
         }
 
         if (sidebar.isButtonClicked(SidebarLabelNames::BellmanFord)) {
-            if (board.runBellmanFord(startNode)) {
-                sidebar.resetClicks(SidebarLabelNames::BellmanFord);
+            if (!board.runBellmanFord(startNode)) {
+                sidebar.resetClick(SidebarLabelNames::BellmanFord);
             }
 
             return;
         }
 
         if (sidebar.isButtonClicked(SidebarLabelNames::Weighted)) {
+            sidebar.weightButtonAvailable(board.isGraphEmpty());
             if (!board.isGraphEmpty()) {
                 return; // can't flip the graph weight if edges were added.
             } else {
