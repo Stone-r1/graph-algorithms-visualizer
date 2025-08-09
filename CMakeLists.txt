@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(raylib REQUIRED)
 set(SOURCES
-    src/test.cpp
+    src/main.cpp
     src/board.cpp
     src/node.cpp
     src/sidebar.cpp
