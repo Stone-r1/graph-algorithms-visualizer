@@ -18,9 +18,11 @@ set(SOURCES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
 target_include_directories(${PROJECT_NAME} PRIVATE 
     src
     src/algorithms
 )
+
 target_link_libraries(${PROJECT_NAME} raylib)

@@ -182,14 +182,23 @@ void Board::drawEdges() {
     }         
 }
 
-void Board::drawWeights() {
+void Board::drawWeights(const Font& font) {
+    const int fontSizeNode = 40;
+    const int fontSizeEdge = 30;
+
     for (auto& [nodeIndex, weight] : highlightedWeights) {
 
         char buffer[10];
         snprintf(buffer, sizeof(buffer), "%d", weight);
         
         Vector2 positions = nodes[nodeIndex].getNodePosition();
-        DrawText(buffer, positions.x - 10, positions.y - 10, 30, BLACK);
+        Vector2 textSize = MeasureTextEx(font, buffer, fontSizeNode, 1);
+        Vector2 drawPos = {
+            positions.x - textSize.x / 2,
+            positions.y - textSize.y / 2
+        };
+
+        DrawTextEx(font, buffer, drawPos, fontSizeNode, 1, BLACK);
     }
 
     for (Node& node : nodes) {
@@ -237,7 +246,7 @@ void Board::drawWeights() {
             midX += nx * offset;
             midY += ny * offset;
 
-            DrawText(buffer, midX - 10, midY - 10, 30, BLACK);
+            DrawTextEx(font, buffer, {midX - 10, midY - 10}, fontSizeEdge, 1, BLACK);
             // ==========================
         }
     }

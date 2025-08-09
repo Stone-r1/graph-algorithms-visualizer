@@ -75,7 +75,7 @@ public:
 
     void drawNodes();
     void drawEdges();
-    void drawWeights();
+    void drawWeights(const Font& font);
 
     bool isGraphEmpty() const;
     bool isGraphWeighted() const;

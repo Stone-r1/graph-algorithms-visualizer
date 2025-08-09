@@ -133,6 +133,11 @@ int main() {
     Board board;
     Sidebar sidebar(GetScreenHeight());
     Vector2 selectedNode = {-1, -1};
+    Font myFont = LoadFont("assets/RobotoRegular.ttf");
+
+    if (myFont.texture.id == 0) {
+        std::cerr << "Failed to load font!\n";
+    }
 
     while (!WindowShouldClose()) { 
         Vector2 mouse = GetMousePosition();
@@ -154,15 +159,16 @@ int main() {
         if (IsKeyPressed(KEY_R)) {
             board.resetRunning();
             sidebar.resetClicks();
+            board.highlightStartingNode(startNode);
         }
 
         BeginDrawing();
             ClearBackground(WHITE);
-            sidebar.draw(); 
+            sidebar.draw(myFont); 
             board.drawEdges();
             board.drawNodes();
             if (board.isGraphWeighted()) {
-                board.drawWeights();
+                board.drawWeights(myFont);
             }
 
             if (weightBox) {
@@ -180,6 +186,7 @@ int main() {
 
         EndDrawing();
     }
-
+    
+    UnloadFont(myFont);
     CloseWindow();
 }

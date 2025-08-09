@@ -11,6 +11,7 @@ inline constexpr float MEDIUM = 50.0f;
 inline constexpr float LARGE = 70.0f;
 
 const float margin = 10.0f;
+const int fontSize = 30;
 float topButtons;
 
 static const std::map<RadiusSize, float> RadiusValues = {
@@ -76,7 +77,7 @@ Sidebar::Sidebar(int screenHeight) :
     yOffset += buttonHeight + margin; 
 }
 
-void Sidebar::draw() {
+void Sidebar::draw(const Font& font) {
     float sidebarHeight = height - 2 * ystart;
     Rectangle rect = {x + margin, ystart, width, sidebarHeight};
 
@@ -87,11 +88,13 @@ void Sidebar::draw() {
     for (const auto& button : buttons) {
         DrawRectangleRec(button.domain, isButtonClicked(button.getButtonLabel()) ? GREEN : LIGHTGRAY);
         DrawRectangleLinesEx(button.domain, 2, DARKGRAY);
-        int textWidth = MeasureText(button.label.c_str(), 18);
-        DrawText(button.label.c_str(),
-                 button.domain.x + (button.domain.width - textWidth) / 2,
-                 button.domain.y + (button.domain.height - 18) / 2,
-                 18, BLACK);
+
+        Vector2 textSize = MeasureTextEx(font, button.label.c_str(), fontSize, 1);
+        Vector2 pos = {
+            button.domain.x + (button.domain.width - textSize.x) / 2,
+            button.domain.y + (button.domain.height - textSize.y) / 2
+        };
+        DrawTextEx(font, button.label.c_str(), pos, fontSize, 1, BLACK); 
     }
 
     DrawLineEx({x + 3 * margin, topButtons + margin}, {(float)width - margin - margin / 2, topButtons + margin}, 5.0f, DARKGRAY);
@@ -99,11 +102,13 @@ void Sidebar::draw() {
     for (const auto& button : radiuses) {
         DrawRectangleRec(button.domain, isButtonClicked(button.getButtonLabel()) ? GREEN : LIGHTGRAY);
         DrawRectangleLinesEx(button.domain, 2, DARKGRAY);
-        int textWidth = MeasureText(button.label.c_str(), 18);
-        DrawText(button.label.c_str(),
-                 button.domain.x + (button.domain.width - textWidth) / 2,
-                 button.domain.y + (button.domain.height - 18) / 2,
-                 18, BLACK);
+
+        Vector2 textSize = MeasureTextEx(font, button.label.c_str(), fontSize, 1);
+        Vector2 pos = {
+            button.domain.x + (button.domain.width - textSize.x) / 2,
+            button.domain.y + (button.domain.height - textSize.y) / 2
+        };
+        DrawTextEx(font, button.label.c_str(), pos, fontSize, 1, BLACK);
     }
 }
 
