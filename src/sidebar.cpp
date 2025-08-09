@@ -214,13 +214,6 @@ void Sidebar::resetClicks() {
 }
 
 void Sidebar::resetClick(const std::string& label) {
-    for (auto& button : radiuses) {
-        if (button.getButtonLabel() == SidebarLabelNames::Medium) {
-            button.isClicked = false;
-            break;
-        }
-    } 
-
     for (auto& button : buttons) {
         if (button.getButtonLabel() == label) {
             button.isClicked = false;
