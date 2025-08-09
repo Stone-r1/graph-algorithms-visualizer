@@ -91,11 +91,10 @@ void Board::addEdge(const Vector2& firstNodePosition, const Vector2& secondNodeP
     graph[firstNodeIndex].push_back({secondNodeIndex, weight}); 
     firstNode->addNeighbor(secondNodeIndex);
 
-    if (!isDirected) {
-        graph[secondNodeIndex].push_back({firstNodeIndex, weight});
-        secondNode->addNeighbor(firstNodeIndex);
-        edges++;
-    }
+    graph[secondNodeIndex].push_back({firstNodeIndex, weight});
+    secondNode->addNeighbor(firstNodeIndex);
+
+    printf("Current amount of edges is: %d\n", edges);
 }
 
 void Board::removeEdge(const Vector2& firstNodePosition, const Vector2& secondNodePosition) {
@@ -116,20 +115,20 @@ void Board::removeEdge(const Vector2& firstNodePosition, const Vector2& secondNo
                 }), neighbors1.end());
     firstNode->removeNeighbor(secondNodeIndex);
    
-    if (!isDirected) {
-        auto& neighbors2 = graph[secondNodeIndex];
-        neighbors2.erase(std::remove_if(neighbors2.begin(), neighbors2.end(),
-                    [firstNodeIndex](const pair<int, int>& p) {return p.first == firstNodeIndex;
-                    }), neighbors2.end());
-        secondNode->removeNeighbor(firstNodeIndex);
-        edges--;
-    }
+    auto& neighbors2 = graph[secondNodeIndex];
+    neighbors2.erase(std::remove_if(neighbors2.begin(), neighbors2.end(),
+                [firstNodeIndex](const pair<int, int>& p) {return p.first == firstNodeIndex;
+                }), neighbors2.end());
+    secondNode->removeNeighbor(firstNodeIndex);
+
+    printf("Current amount of edges is: %d\n", edges);
 }
 
 void Board::removeNode(const Vector2& mousePosition) {
     Node* nodeToRemove = findNodeFromPosition(mousePosition);
     if (!nodeToRemove) return;
 
+    edges -= graph[nodeToRemove->getNodeIndex()].size();
     graph[nodeToRemove->getNodeIndex()].clear();
     nodeToRemove->removeNeighbors();
 
@@ -145,6 +144,7 @@ void Board::removeNode(const Vector2& mousePosition) {
 
     // mark node as invalid
     *nodeToRemove = Node::makeInvalidNode();
+    printf("Current amount of edges is: %d\n", edges);
 }
 
 void Board::drawNodes() {

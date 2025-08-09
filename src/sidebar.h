@@ -47,8 +47,9 @@ public:
     RadiusSize getSelectedRadiusSize() const;
     float getSelectedRadius() const;
     void flipGraphWeight();
+    void weightButtonAvailable(const bool& status);
     void resetClicks();
-    void resetClicks(const std::string& label); // reset everything but the one with label
+    void resetClick(const std::string& label); // reset only "label" button 
 };
 
 #endif

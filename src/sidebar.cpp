@@ -142,6 +142,14 @@ void Sidebar::handleMouse(Vector2 mousePosition) {
     }
 }
 
+void Sidebar::weightButtonAvailable(const bool& status) {
+    for (auto& button : buttons) {
+        if (button.getButtonLabel() == SidebarLabelNames::Weighted) {
+            button.isClicked = status;
+        }
+    }
+}
+
 bool Sidebar::isInSidebarDomain(Vector2 mousePosition, float currentRadius) {
     if (mousePosition.x - 2 * currentRadius < width && mousePosition.y - 2 * currentRadius < height) {
         return true;
@@ -205,26 +213,18 @@ void Sidebar::resetClicks() {
     }
 }
 
-void Sidebar::resetClicks(const std::string& label) {
+void Sidebar::resetClick(const std::string& label) {
     for (auto& button : radiuses) {
         if (button.getButtonLabel() == SidebarLabelNames::Medium) {
-            button.isClicked = true;
-            continue;
+            button.isClicked = false;
+            break;
         }
-
-        button.isClicked = false;
     } 
 
     for (auto& button : buttons) {
         if (button.getButtonLabel() == label) {
-            button.isClicked = true;
-            continue;
+            button.isClicked = false;
+            break;
         }
-
-        if (button.getButtonLabel() == SidebarLabelNames::Weighted) {
-            continue;
-        }
-
-        button.isClicked = false;
     }
 }
