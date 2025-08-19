@@ -73,7 +73,7 @@ Colorscheme:
 3. **Run**
     - Windows:
     ```bash
-    ./bin/graph.exe
+    ./graph.exe
     ```
     - Linux:
     ```bash

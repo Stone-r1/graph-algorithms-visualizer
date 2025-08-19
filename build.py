@@ -42,6 +42,7 @@ def main():
             run(["cmake", "..", "-G", generator] + extra_args)
 
         run(["cmake", "--build", "."])
+        run(["cd", "build/bin"])
 
     # Linux
     else:
@@ -49,6 +50,7 @@ def main():
             run(["cmake", ".."])
 
         run(["cmake", "--build", "."])
+        run(["cd", "build"])
 
 if __name__ == "__main__":
     main()
