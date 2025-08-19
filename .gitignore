@@ -2,3 +2,4 @@
 /build
 /src/test.cpp
 compile_flags.txt
+.cache/

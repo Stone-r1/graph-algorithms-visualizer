@@ -65,22 +65,18 @@ Colorscheme:
    cd graph-algorithms-visualizer
    ```
 
-2. **Create a Build Directory and Run CMake**
+2. **Run Python Script**
    ```bash
-   mkdir build
-   cd build
-   cmake ..
+   python build.py
    ```
 
-3. **Compile the Project**
-   ```bash
-   cmake --build .
-   ```
-
-4. **Run the Application**
-   After a successful build, locate and execute the generated binary, typically found in the build directory:
-   ```bash
-   ./graph
-   ```
-
+3. **Run**
+    - Windows:
+    ```bash
+    ./bin/graph.exe
+    ```
+    - Linux:
+    ```bash
+    ./graph
+    ```
 ---
