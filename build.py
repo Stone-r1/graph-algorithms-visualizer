@@ -21,7 +21,7 @@ def get_generator():
 
 def main():
     # Git submodules
-    run(["git", "submodule", "update", "--init", "--recursive"])
+    # run(["git", "submodule", "update", "--init", "--recursive"])
 
     # Build dir
     if not os.path.exists("build"):

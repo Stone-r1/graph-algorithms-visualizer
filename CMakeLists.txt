@@ -8,7 +8,7 @@ if(WIN32)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
-add_subdirectory(external/raylib)
+add_subdirectory(external)
 
 set(SOURCES
     src/main.cpp
@@ -23,6 +23,7 @@ set(SOURCES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 target_include_directories(${PROJECT_NAME} PRIVATE 
