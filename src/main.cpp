@@ -4,7 +4,8 @@
 #include "raylib.h"
 #include "sidebar.h"
 #include "constants.h"
-
+// TODO: User should not be able to place node on the edge of the screen
+// TODO: Window should be resizable with minSize as it is now
 float radius;
 static std::optional<Vector2> firstNode = std::nullopt;
 static std::optional<Vector2> lastNode = std::nullopt;
