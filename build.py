@@ -42,7 +42,7 @@ def main():
             run(["cmake", "..", "-G", generator] + extra_args)
 
         run(["cmake", "--build", "."])
-        run(["cd", "build/bin"])
+        os.chdir("build")
 
     # Linux
     else:
