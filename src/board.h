@@ -38,6 +38,18 @@ private:
 
 public:
     Board();
+    ~Board() = default;
+
+    // =================
+    // Disable copying
+    Board(const Board&) = delete;
+    Board& operator=(const Board&) = delete;
+
+    // Enable moving
+    Board(Board&&) noexcept = default;
+    Board& operator=(Board&&) noexcept = default;
+    // Callers can transfer ownership but can't copy.
+    // =================
 
     void clear();
 

@@ -21,7 +21,10 @@ Board::Board() :
     lastClickedNode(Node::makeInvalidNode()),
     graph(NodeConstants::MAX_NODES),
     nodes(NodeConstants::MAX_NODES, Node::makeInvalidNode())
-{}
+{
+    graph.reserve(NodeConstants::MAX_NODES);
+    nodes.reserve(NodeConstants::MAX_NODES);
+}
 
 void Board::clear() {
     resetRunning();
