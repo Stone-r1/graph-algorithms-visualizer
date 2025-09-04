@@ -6,10 +6,7 @@
 
 #include "raylib.h"
 #include "node.h"
-#include "algorithms/BFS/bfs.h"
-#include "algorithms/DFS/dfs.h"
-#include "algorithms/Dijkstra/dijkstra.h"
-#include "algorithms/Bellman-Ford/bellmanFord.h"
+#include "traversalAlgorithm.h"
 
 class Board {
 private:

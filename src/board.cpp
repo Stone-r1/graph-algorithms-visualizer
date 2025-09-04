@@ -10,6 +10,11 @@
 #include "node.h"
 #include "data/constants.h"
 
+#include "algorithms/BFS/bfs.h"
+#include "algorithms/DFS/dfs.h"
+#include "algorithms/Dijkstra/dijkstra.h"
+#include "algorithms/Bellman-Ford/bellmanFord.h"
+
 // TODO: Make general pattern for running algorithms
 Board::Board() :
     edges(0),
