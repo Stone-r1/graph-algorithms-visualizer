@@ -1,8 +1,9 @@
 #include "raylib.h"
 #include "node.h"
+#include "data/constants.h"
 
 
-Node::Node(int index, Vector2 position, float radius = 50.0f) :
+Node::Node(int index, Vector2 position, float radius = NodeConstants::MEDIUM_RADIUS) :
     nodeIndex(index),
     nodePosition(position),
     nodeRadius(radius),
@@ -67,7 +68,7 @@ void Node::changeNodeStatus() {
 }
 
 void Node::drawNode() const {
-    DrawCircle(nodePosition.x, nodePosition.y, nodeRadius, RED);
+    DrawCircle(nodePosition.x, nodePosition.y, nodeRadius, ColorConstants::NODE_VISITED);
 }
 
 void Node::setHighlight() {

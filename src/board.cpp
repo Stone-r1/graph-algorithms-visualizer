@@ -8,9 +8,10 @@
 #include "raylib.h"
 #include "board.h"
 #include "node.h"
+#include "data/constants.h"
 
-#define MAX_NODES 1000
-
+// TODO: Separate UI and Functionality
+// TODO: Make general pattern for running algorithms
 Board::Board() :
     edges(0),
     lastNodeIndex(0),
@@ -19,8 +20,8 @@ Board::Board() :
     isWeighted(false),
     isRunning(false),
     lastClickedNode(Node::makeInvalidNode()),
-    graph(MAX_NODES),
-    nodes(MAX_NODES, Node::makeInvalidNode())
+    graph(NodeConstants::MAX_NODES),
+    nodes(NodeConstants::MAX_NODES, Node::makeInvalidNode())
 {}
 
 void Board::clear() {
@@ -28,8 +29,8 @@ void Board::clear() {
     graph.clear();
     nodes.clear();
 
-    graph.resize(MAX_NODES);
-    nodes.assign(MAX_NODES, Node::makeInvalidNode());
+    graph.resize(NodeConstants::MAX_NODES);
+    nodes.assign(NodeConstants::MAX_NODES, Node::makeInvalidNode());
     edges = 0;
 
     if (isGraphWeighted()) {
@@ -59,7 +60,7 @@ std::optional<Vector2> Board::isInNodeDomain(const Vector2& mousePosition) {
 bool Board::isInBoardBorderDomain(const Vector2& mousePosition, const float& currentRadius,
                                   const int& screenWidth, const int& screenHeight) {
     
-    const float allowedMargin = 1.5f * currentRadius;
+    const float allowedMargin = UIConstants::MARGIN_FROM_BORDER * currentRadius;
     return (mousePosition.y <= allowedMargin ||
             mousePosition.y >= screenHeight - allowedMargin ||
             mousePosition.x <= allowedMargin ||
@@ -68,7 +69,7 @@ bool Board::isInBoardBorderDomain(const Vector2& mousePosition, const float& cur
 
 void Board::addNode(const Vector2& mousePosition, const float& currentRadius) {
     for (const Node& node : nodes) {
-        float minDistance = node.getNodeRadius() * 3;
+        float minDistance = node.getNodeRadius() * UIConstants::MARGIN_FROM_NODE;
 
         if (node.isNodeValid()) {
             Vector2 nodePosition = node.getNodePosition(); 
@@ -158,17 +159,18 @@ void Board::removeNode(const Vector2& mousePosition) {
 }
 
 void Board::drawNodes() {
+    using namespace ColorConstants;
     int startIndex = currentAlgo ? currentAlgo->getStartNode() : startNodeIndex;
 
     for (const Node& node : nodes) {
         if (!node.isNodeValid()) continue;
 
         Vector2 nodePosition = node.getNodePosition();
-        Color color = BLUE; // standard
+        Color color = NODE_DEFAULT; 
         if (node.getNodeIndex() == startNodeIndex) {
-            color = ORANGE;
+            color = NODE_START;
         } else if (node.highlighted()) {
-            color = currentStep == -1 ? ORANGE : RED;
+            color = currentStep == -1 ? NODE_START : NODE_VISITED;
         }
 
         DrawCircle(nodePosition.x, nodePosition.y, node.getNodeRadius(), color);
@@ -185,30 +187,26 @@ void Board::drawEdges() {
             Node* neighbor = &nodes[*it];
             if (!neighbor->isNodeValid()) continue;
 
-            Color color = highlightedEdges.count({node.getNodeIndex(), neighbor->getNodeIndex()}) ? DARKBLUE : GREEN;
+            Color color = highlightedEdges.count({node.getNodeIndex(), neighbor->getNodeIndex()}) ? ColorConstants::EDGE_HIGHLIGHT : ColorConstants::EDGE_DEFAULT;
             DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 6.0f, color);
-            // DrawLineEx(node.getNodePosition(), neighbor->getNodePosition(), 2.0f, color);
         }
     }         
 }
 
 void Board::drawWeights(const Font& font) {
-    const int fontSizeNode = 40;
-    const int fontSizeEdge = 30;
-
     for (auto& [nodeIndex, weight] : highlightedWeights) {
 
         char buffer[10];
         snprintf(buffer, sizeof(buffer), "%d", weight);
         
         Vector2 positions = nodes[nodeIndex].getNodePosition();
-        Vector2 textSize = MeasureTextEx(font, buffer, fontSizeNode, 1);
+        Vector2 textSize = MeasureTextEx(font, buffer, UIConstants::FONT_SIZE_NODE, 1);
         Vector2 drawPos = {
             positions.x - textSize.x / 2,
             positions.y - textSize.y / 2
         };
 
-        DrawTextEx(font, buffer, drawPos, fontSizeNode, 1, BLACK);
+        DrawTextEx(font, buffer, drawPos, UIConstants::FONT_SIZE_NODE, 1, ColorConstants::TEXT);
     }
 
     for (Node& node : nodes) {
@@ -251,12 +249,10 @@ void Board::drawWeights(const Font& font) {
             float nx = -dy / length;
             float ny = dx / length;
 
-            float offset = 20.0f;
+            midX += nx * UIConstants::WEIGHT_OFFSET;
+            midY += ny * UIConstants::WEIGHT_OFFSET;
 
-            midX += nx * offset;
-            midY += ny * offset;
-
-            DrawTextEx(font, buffer, {midX - 10, midY - 10}, fontSizeEdge, 1, BLACK);
+            DrawTextEx(font, buffer, {midX - 10, midY - 10}, UIConstants::FONT_SIZE_EDGE, 1, ColorConstants::TEXT);
             // ==========================
         }
     }
@@ -436,10 +432,9 @@ void Board::flipGraphWeight() {
 
 void Board::askForWeight() {
     Rectangle box = {300, 200, 200, 50};
-    Color color = {254, 248, 221, 255};
-    DrawRectangleRec(box, color);
-    DrawRectangleLinesEx(box, 2, BLACK);
-    DrawText(weightInput, box.x + 10, box.y + 15, 30, DARKGRAY);
+    DrawRectangleRec(box, ColorConstants::WEIGHT_BOX_BACKGROUND);
+    DrawRectangleLinesEx(box, 2, ColorConstants::WEIGHT_BOX_BORDER);
+    DrawText(weightInput, box.x + 10, box.y + 15, 30, ColorConstants::TEXT);
 
     int key = GetCharPressed();
     while (key > 0) {

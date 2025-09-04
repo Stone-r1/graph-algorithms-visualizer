@@ -3,8 +3,9 @@
 #include <optional>
 #include "raylib.h"
 #include "sidebar.h"
-#include "constants.h"
+#include "data/constants.h"
 
+// TODO: Make general pattern for clicking
 float radius;
 static std::optional<Vector2> firstNode = std::nullopt;
 static std::optional<Vector2> lastNode = std::nullopt;
@@ -33,45 +34,45 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
     } else {
         sidebar.handleMouse(mouse);
 
-        if (sidebar.isButtonClicked(SidebarLabelNames::Clear)) {
+        if (sidebar.isButtonClicked(LabelNames::CLEAR)) {
             board.clear();
             sidebar.resetClicks();
             return;
         }
         
-        if (sidebar.isButtonClicked(SidebarLabelNames::BFS)) {
+        if (sidebar.isButtonClicked(LabelNames::BFS)) {
             if (!board.runBFS(startNode)) {
-                sidebar.resetClick(SidebarLabelNames::BFS);
+                sidebar.resetClick(LabelNames::BFS);
             }
 
             return;
         }
 
-        if (sidebar.isButtonClicked(SidebarLabelNames::DFS)) {
+        if (sidebar.isButtonClicked(LabelNames::DFS)) {
             if (!board.runDFS(startNode)) {
-                sidebar.resetClick(SidebarLabelNames::DFS);
+                sidebar.resetClick(LabelNames::DFS);
             }
 
             return;
         }
 
-        if (sidebar.isButtonClicked(SidebarLabelNames::Dijkstra)) {
+        if (sidebar.isButtonClicked(LabelNames::DIJKSTRA)) {
             if (!board.runDijkstra(startNode)) {
-                sidebar.resetClick(SidebarLabelNames::Dijkstra);
+                sidebar.resetClick(LabelNames::DIJKSTRA);
             }
 
             return;
         }
 
-        if (sidebar.isButtonClicked(SidebarLabelNames::BellmanFord)) {
+        if (sidebar.isButtonClicked(LabelNames::BELLMAN_FORD)) {
             if (!board.runBellmanFord(startNode)) {
-                sidebar.resetClick(SidebarLabelNames::BellmanFord);
+                sidebar.resetClick(LabelNames::BELLMAN_FORD);
             }
 
             return;
         }
 
-        if (sidebar.isButtonClicked(SidebarLabelNames::Weighted)) {
+        if (sidebar.isButtonClicked(LabelNames::WEIGHTED)) {
             sidebar.weightButtonAvailable(board.isGraphEmpty());
             if (!board.isGraphEmpty()) {
                 return; // can't flip the graph weight if edges were added.
@@ -136,7 +137,7 @@ int main() {
     Vector2 selectedNode = {-1, -1};
     Font myFont = LoadFont("assets/RobotoRegular.ttf");
 
-    if (myFont.texture.id == 0) {
+    if (!myFont.texture.id) {
         std::cerr << "Failed to load font!\n";
     }
 
@@ -164,7 +165,7 @@ int main() {
         }
 
         BeginDrawing();
-            ClearBackground(WHITE);
+            ClearBackground(ColorConstants::BOARD_BACKGROUND);
             sidebar.draw(myFont); 
             board.drawEdges();
             board.drawNodes();

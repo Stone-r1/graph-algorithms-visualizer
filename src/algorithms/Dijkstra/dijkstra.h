@@ -4,7 +4,6 @@
 #include "traversalAlgorithm.h"
 #include <vector>
 #include <queue>
-#include <tuple>
 
 using std::vector;
 using std::pair;

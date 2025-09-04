@@ -1,114 +1,115 @@
 #include "raylib.h"
 #include "sidebar.h"
-#include "constants.h"
+#include "data/constants.h"
 #include <vector>
-#include <iostream>
 #include <string>
-#include <map>
+#include <iostream>
+#include <unordered_map>
 
-inline constexpr float SMALL = 30.0f;
-inline constexpr float MEDIUM = 50.0f;
-inline constexpr float LARGE = 70.0f;
-
-const float margin = 10.0f;
-const int fontSize = 30;
 float topButtons;
 
-static const std::map<RadiusSize, float> RadiusValues = {
-    {RadiusSize::Small, SMALL},
-    {RadiusSize::Medium, MEDIUM},
-    {RadiusSize::Large, LARGE}
+// TODO: Replace this ugly block later
+// TODO: Replace UI and Functionality
+static const std::unordered_map<RadiusSize, float> RadiusValues = {
+    {RadiusSize::Small, NodeConstants::SMALL_RADIUS},
+    {RadiusSize::Medium, NodeConstants::MEDIUM_RADIUS},
+    {RadiusSize::Large, NodeConstants::LARGE_RADIUS}
 };
 
 static RadiusSize labelToRadiusEnum(const std::string& label) {
-    if (label == SidebarLabelNames::Small) return RadiusSize::Small;
-    if (label == SidebarLabelNames::Medium) return RadiusSize::Medium;
-    if (label == SidebarLabelNames::Large) return RadiusSize::Large;
+    if (label == LabelNames::SMALL) return RadiusSize::Small;
+    if (label == LabelNames::MEDIUM) return RadiusSize::Medium;
+    if (label == LabelNames::LARGE) return RadiusSize::Large;
     return RadiusSize::None;
 }
 
 Sidebar::Sidebar(int screenHeight) :
     x(0), 
-    width(250),
-    height(800),
+    width(UIConstants::SIDEBAR_WIDTH),
+    height(UIConstants::SIDEBAR_HEIGHT),
     ystart(screenHeight - 6.0f * screenHeight / 7)
 {
+    using namespace UIConstants;
+
     float buttonHeight = 60.0f;
-    float buttonWidth = width - 2 * margin;
+    float buttonWidth = width - 2 * MARGIN;
     float buttonX = x + (width - buttonWidth) / 2;
-    float yOffset = ystart + 3 * margin;
+    float yOffset = ystart + 3 * MARGIN;
 
     std::vector<std::string> labels = {
-        SidebarLabelNames::Clear,
-        SidebarLabelNames::Weighted,
-        SidebarLabelNames::DFS,
-        SidebarLabelNames::BFS,
-        SidebarLabelNames::Dijkstra,
-        SidebarLabelNames::BellmanFord
+        LabelNames::CLEAR,
+        LabelNames::WEIGHTED,
+        LabelNames::DFS,
+        LabelNames::BFS,
+        LabelNames::DIJKSTRA,
+        LabelNames::BELLMAN_FORD
     };
 
     for (const auto& label : labels) {
-        buttons.emplace_back(Rectangle{buttonX + margin, yOffset, buttonWidth, buttonHeight}, label);
-        yOffset += (buttonHeight + margin);
+        buttons.emplace_back(Rectangle{buttonX + MARGIN, yOffset, buttonWidth, buttonHeight}, label);
+        yOffset += (buttonHeight + MARGIN);
     }
 
     topButtons = yOffset;
-    yOffset += 2.5 * margin;
+    yOffset += 2.5 * MARGIN;
     std::vector<std::string> radiusLabels = {
-        SidebarLabelNames::Small,
-        SidebarLabelNames::Medium,
-        SidebarLabelNames::Large
+        LabelNames::SMALL,
+        LabelNames::MEDIUM,
+        LabelNames::LARGE
     };
 
-    buttonWidth = (width - 4 * margin) / 3.0f;  // 3 buttons + 2 gaps = 4 margins
-    float totalWidth = 3 * buttonWidth + 2 * margin;
-    float baseX = x + (width - totalWidth) / 2 + margin;
+    buttonWidth = (width - 4 * MARGIN) / 3.0f;  // 3 buttons + 2 gaps = 4 margins
+    float totalWidth = 3 * buttonWidth + 2 * MARGIN;
+    float baseX = x + (width - totalWidth) / 2 + MARGIN;
     float radiusY = yOffset;
 
     for (int i = 0; i < radiusLabels.size(); ++i) {
-        float buttonX = baseX + i * (buttonWidth + margin);
+        float buttonX = baseX + i * (buttonWidth + MARGIN);
         radiuses.emplace_back(Rectangle{buttonX, radiusY, buttonWidth, buttonHeight}, radiusLabels[i]);
-        if (radiusLabels[i] == SidebarLabelNames::Medium) {
+        if (radiusLabels[i] == LabelNames::MEDIUM) {
             // default value
             radiuses[i].isClicked = true;
         }
     }
 
-    yOffset += buttonHeight + margin; 
+    yOffset += buttonHeight + MARGIN; 
 }
 
 void Sidebar::draw(const Font& font) {
-    float sidebarHeight = height - 2 * ystart;
-    Rectangle rect = {x + margin, ystart, width, sidebarHeight};
+    using namespace UIConstants;
+    using namespace ColorConstants;
 
-    DrawRectangleRounded(rect, 0.2f, 1, GRAY);
-    Rectangle temp = {x + margin + 1, ystart, width - 2, sidebarHeight - 2}; // 1 pixel was playing with my nerves...
-    DrawRectangleRoundedLinesEx(temp, 0.2f, 1, 5, DARKGRAY);
+    float sidebarHeight = height - 2 * ystart;
+    Rectangle rect = {x + MARGIN, ystart, width, sidebarHeight};
+
+    DrawRectangleRounded(rect, 0.2f, 1, SIDEBAR_BACKGROUND);
+    Rectangle temp = {x + MARGIN + 1, ystart, width - 2, sidebarHeight - 2}; // 1 pixel was playing with my nerves...
+    DrawRectangleRoundedLinesEx(temp, 0.2f, 1, 5, SIDEBAR_BORDER);
 
     for (const auto& button : buttons) {
-        DrawRectangleRec(button.domain, isButtonClicked(button.getButtonLabel()) ? GREEN : LIGHTGRAY);
-        DrawRectangleLinesEx(button.domain, 2, DARKGRAY);
+        DrawRectangleRec(button.domain, isButtonClicked(button.getButtonLabel()) ? SIDEBAR_BUTTON_ACTIVE : SIDEBAR_BUTTON_INACTIVE);
+        DrawRectangleLinesEx(button.domain, 2, SIDEBAR_BORDER);
 
-        Vector2 textSize = MeasureTextEx(font, button.label.c_str(), fontSize, 1);
+        Vector2 textSize = MeasureTextEx(font, button.label.c_str(), FONT_SIZE_SIDEBAR, 1);
         Vector2 pos = {
             button.domain.x + (button.domain.width - textSize.x) / 2,
             button.domain.y + (button.domain.height - textSize.y) / 2
         };
-        DrawTextEx(font, button.label.c_str(), pos, fontSize, 1, BLACK); 
+        DrawTextEx(font, button.label.c_str(), pos, FONT_SIZE_SIDEBAR, 1, TEXT); 
     }
 
-    DrawLineEx({x + 3 * margin, topButtons + margin}, {(float)width - margin - margin / 2, topButtons + margin}, 5.0f, DARKGRAY);
+    DrawLineEx({x + 3 * MARGIN, topButtons + MARGIN}, {(float)width - MARGIN - MARGIN / 2, topButtons + MARGIN}, 5.0f, SIDEBAR_BORDER);
 
     for (const auto& button : radiuses) {
-        DrawRectangleRec(button.domain, isButtonClicked(button.getButtonLabel()) ? GREEN : LIGHTGRAY);
-        DrawRectangleLinesEx(button.domain, 2, DARKGRAY);
+        DrawRectangleRec(button.domain, isButtonClicked(button.getButtonLabel()) ? SIDEBAR_BUTTON_ACTIVE : SIDEBAR_BUTTON_INACTIVE);
+        DrawRectangleLinesEx(button.domain, 2, SIDEBAR_BORDER);
 
-        Vector2 textSize = MeasureTextEx(font, button.label.c_str(), fontSize, 1);
+        Vector2 textSize = MeasureTextEx(font, button.label.c_str(), FONT_SIZE_SIDEBAR, 1);
         Vector2 pos = {
             button.domain.x + (button.domain.width - textSize.x) / 2,
             button.domain.y + (button.domain.height - textSize.y) / 2
         };
-        DrawTextEx(font, button.label.c_str(), pos, fontSize, 1, BLACK);
+        DrawTextEx(font, button.label.c_str(), pos, FONT_SIZE_SIDEBAR, 1, TEXT);
     }
 }
 
@@ -120,7 +121,7 @@ void Sidebar::handleMouse(Vector2 mousePosition) {
     for (auto& button : buttons) {
         const Rectangle& rect = button.domain;
 
-        if (button.getButtonLabel() != SidebarLabelNames::Weighted) {
+        if (button.getButtonLabel() != LabelNames::WEIGHTED) {
             button.isClicked = false;
         }
 
@@ -149,7 +150,7 @@ void Sidebar::handleMouse(Vector2 mousePosition) {
 
 void Sidebar::weightButtonAvailable(const bool& status) {
     for (auto& button : buttons) {
-        if (button.getButtonLabel() == SidebarLabelNames::Weighted) {
+        if (button.getButtonLabel() == LabelNames::WEIGHTED) {
             button.isClicked = status;
         }
     }
@@ -190,7 +191,7 @@ RadiusSize Sidebar::getSelectedRadiusSize() const {
 
 void Sidebar::flipGraphWeight() {
     for (auto& button : buttons) {
-        if (button.getButtonLabel() == SidebarLabelNames::Weighted) {
+        if (button.getButtonLabel() == LabelNames::WEIGHTED) {
             button.isClicked = !button.isClicked;
             return;
         }
@@ -205,7 +206,7 @@ float Sidebar::getSelectedRadius() const {
 
 void Sidebar::resetClicks() {
     for (auto& button : radiuses) {
-        if (button.getButtonLabel() == SidebarLabelNames::Medium) {
+        if (button.getButtonLabel() == LabelNames::MEDIUM) {
             button.isClicked = true;
             continue;
         }
