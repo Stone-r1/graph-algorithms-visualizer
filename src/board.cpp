@@ -1,11 +1,7 @@
-#include <vector>
-#include <set>
 #include <algorithm>
-#include <ctype.h>
 #include <iostream>
 #include <cmath>
 
-#include "raylib.h"
 #include "board.h"
 #include "node.h"
 #include "data/constants.h"

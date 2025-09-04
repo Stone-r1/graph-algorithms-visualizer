@@ -1,8 +1,6 @@
 #include "raylib.h"
 #include "sidebar.h"
 #include "data/constants.h"
-#include <vector>
-#include <string>
 #include <iostream>
 
 // local helper

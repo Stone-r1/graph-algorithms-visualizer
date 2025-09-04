@@ -1,7 +1,5 @@
 #include "board.h"
 #include <iostream>
-#include <optional>
-#include "raylib.h"
 #include "sidebar.h"
 #include "data/constants.h"
 
