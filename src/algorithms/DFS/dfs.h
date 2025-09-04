@@ -5,21 +5,18 @@
 #include <vector>
 #include <stack>
 
-using std::vector;
-using std::pair;
-
 class DFS : public TraversalAlgorithm {
 private:
-    const vector<vector<pair<int, int>>>& graph;
-    std::stack<pair<int, int>> st;
-    vector<bool> visited;
+    const std::vector<std::vector<std::pair<int, int>>>& graph;
+    std::stack<std::pair<int, int>> st;
+    std::vector<bool> visited;
     bool finished;
     int currentStepIndex = -1;
-    vector<Step> history;
+    std::vector<Step> history;
     int start;
 
 public:
-    DFS(const vector<vector<pair<int, int>>>& adj, int startNode);
+    DFS(const std::vector<std::vector<std::pair<int, int>>>& adj, int startNode);
 
     Step stepForward();
     Step stepBackward();

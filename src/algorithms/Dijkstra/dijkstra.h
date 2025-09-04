@@ -5,23 +5,20 @@
 #include <vector>
 #include <queue>
 
-using std::vector;
-using std::pair;
-
 class Dijkstra : public TraversalAlgorithm {
 private:
-    const vector<vector<pair<int, int>>>& graph;
-    std::priority_queue<pair<int, int>, vector<pair<int, int>>, std::greater<>> pq;
+    const std::vector<std::vector<std::pair<int, int>>>& graph;
+    std::priority_queue<std::pair<int, int>, std::vector<std::pair<int, int>>, std::greater<>> pq;
     std::vector<long long> distances;
-    vector<bool> visited;
+    std::vector<bool> visited;
     bool finished;
     bool precompiled = false;
     int currentStepIndex = -1;
-    vector<Step> history;
+    std::vector<Step> history;
     int start;
 
 public:
-    Dijkstra(const vector<vector<pair<int, int>>>& adj, int startNode);
+    Dijkstra(const std::vector<std::vector<std::pair<int, int>>>& adj, int startNode);
 
     Step stepForward();
     Step stepBackward();

@@ -10,7 +10,6 @@
 #include "node.h"
 #include "data/constants.h"
 
-// TODO: Separate UI and Functionality
 // TODO: Make general pattern for running algorithms
 Board::Board() :
     edges(0),
@@ -57,9 +56,7 @@ std::optional<Vector2> Board::isInNodeDomain(const Vector2& mousePosition) {
     return std::nullopt;
 }
 
-bool Board::isInBoardBorderDomain(const Vector2& mousePosition, const float& currentRadius,
-                                  const int& screenWidth, const int& screenHeight) {
-    
+bool Board::isInBoardBorderDomain(const Vector2& mousePosition, float currentRadius, int screenWidth, int screenHeight) { 
     const float allowedMargin = UIConstants::MARGIN_FROM_BORDER * currentRadius;
     return (mousePosition.y <= allowedMargin ||
             mousePosition.y >= screenHeight - allowedMargin ||
@@ -67,7 +64,7 @@ bool Board::isInBoardBorderDomain(const Vector2& mousePosition, const float& cur
             mousePosition.x >= screenWidth - allowedMargin);
 }
 
-void Board::addNode(const Vector2& mousePosition, const float& currentRadius) {
+void Board::addNode(const Vector2& mousePosition, float currentRadius) {
     for (const Node& node : nodes) {
         float minDistance = node.getNodeRadius() * UIConstants::MARGIN_FROM_NODE;
 
@@ -122,13 +119,13 @@ void Board::removeEdge(const Vector2& firstNodePosition, const Vector2& secondNo
 
     auto& neighbors1 = graph[firstNodeIndex];
     neighbors1.erase(std::remove_if(neighbors1.begin(), neighbors1.end(), 
-                [secondNodeIndex](const pair<int, int>& p) {return p.first == secondNodeIndex;
+                [secondNodeIndex](const std::pair<int, int>& p) {return p.first == secondNodeIndex;
                 }), neighbors1.end());
     firstNode->removeNeighbor(secondNodeIndex);
    
     auto& neighbors2 = graph[secondNodeIndex];
     neighbors2.erase(std::remove_if(neighbors2.begin(), neighbors2.end(),
-                [firstNodeIndex](const pair<int, int>& p) {return p.first == firstNodeIndex;
+                [firstNodeIndex](const std::pair<int, int>& p) {return p.first == firstNodeIndex;
                 }), neighbors2.end());
     secondNode->removeNeighbor(firstNodeIndex);
 
@@ -148,7 +145,7 @@ void Board::removeNode(const Vector2& mousePosition) {
 
         auto& adj = graph[i];
         adj.erase(std::remove_if(adj.begin(), adj.end(),
-                    [nodeToRemove](const pair<int, int>& p) {return p.first == nodeToRemove->getNodeIndex();
+                    [nodeToRemove](const std::pair<int, int>& p) {return p.first == nodeToRemove->getNodeIndex();
                     }), adj.end());
         nodes[i].removeNeighbor(nodeToRemove->getNodeIndex());
     }
@@ -343,20 +340,20 @@ bool Board::runBellmanFord(const Vector2& startNodePosition) {
     return false;
 }
 
-void Board::highlightNode(const int& index) {
+void Board::highlightNode(int index) {
     if (index >= 0 && index < nodes.size() && nodes[index].isNodeValid()) {
         nodes[index].setHighlight();
     }
 }
 
-void Board::highlightEdge(const int& from, const int& to) {
+void Board::highlightEdge(int from, int to) {
       highlightedEdges.insert({from, to});
       if (!isDirected && from != to) {
           highlightedEdges.insert({to, from});
       }
 }
 
-void Board::highlightWeight(const int& to, const int& weight) {
+void Board::highlightWeight(int to, int weight) {
     highlightedWeights[to] = weight; 
 }
 

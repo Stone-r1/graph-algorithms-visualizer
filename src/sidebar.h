@@ -14,16 +14,9 @@ struct Button {
     Button(Rectangle rect, const std::string& str)
         : domain(rect), label(str), isClicked(false) {}
 
-    std::string getButtonLabel() const {
+    const std::string& getButtonLabel() const {
         return label;
     }
-};
-
-enum class RadiusSize {
-    Small,
-    Medium,
-    Large,
-    None
 };
 
 class Sidebar {
@@ -32,6 +25,7 @@ private:
     float width;
     float height;
     float ystart;
+    float topButtons;
 
     std::vector<Button> buttons;
     std::vector<Button> radiuses;
@@ -44,7 +38,6 @@ public:
     bool isInSidebarDomain(Vector2 mousePosition, float currentRadius);
 
     bool isButtonClicked(const std::string& label);
-    RadiusSize getSelectedRadiusSize() const;
     float getSelectedRadius() const;
     void flipGraphWeight();
     void weightButtonAvailable(const bool& status);

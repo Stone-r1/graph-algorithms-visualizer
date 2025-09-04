@@ -10,8 +10,6 @@
 #include "algorithms/DFS/dfs.h"
 #include "algorithms/Dijkstra/dijkstra.h"
 #include "algorithms/Bellman-Ford/bellmanFord.h"
-using std::vector;
-
 
 class Board {
 private:
@@ -29,9 +27,9 @@ private:
     int weightDigitCount = 0;
     bool weightReady = false;
 
-    vector<vector<pair<int, int>>> graph;
-    vector<Node> nodes;
-    std::set<pair<int, int>> highlightedEdges;
+    std::vector<std::vector<std::pair<int, int>>> graph;
+    std::vector<Node> nodes;
+    std::set<std::pair<int, int>> highlightedEdges;
     std::unordered_map<int, int> highlightedWeights;
 
     std::unique_ptr<TraversalAlgorithm> currentAlgo;
@@ -44,10 +42,8 @@ public:
     void clear();
 
     std::optional<Vector2> isInNodeDomain(const Vector2& mousePosition);
-    bool isInBoardBorderDomain(const Vector2& mousePosition, const float& currentRadius,
-                               const int& screenWidth, const int& screenHeight);
-
-    void addNode(const Vector2& mousePosition, const float& currentRadius);
+    bool isInBoardBorderDomain(const Vector2& mousePosition, float currentRadius, int screenWidth, int screenHeight);
+    void addNode(const Vector2& mousePosition, float currentRadius);
     void addEdge(const Vector2& firstNodePosition, const Vector2& secondNodePosition, int weight = 1);
     void removeEdge(const Vector2& firstNodePosition, const Vector2& secondNodePosition);
     void removeNode(const Vector2& mousePosition);
@@ -64,9 +60,9 @@ public:
     // ====================
     
     // ==== highlights ====
-    void highlightNode(const int& index);
-    void highlightEdge(const int& from, const int& to);
-    void highlightWeight(const int& to, const int& weight);
+    void highlightNode(int index);
+    void highlightEdge(int from, int to);
+    void highlightWeight(int to, int weight);
     void highlightStartingNode(const Vector2& mousePosition);
     void resetHighlights();
     // ====================

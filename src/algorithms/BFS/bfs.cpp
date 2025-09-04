@@ -1,6 +1,6 @@
 #include "bfs.h"
 
-BFS::BFS(const vector<vector<pair<int, int>>>& adj, int startNode) : 
+BFS::BFS(const std::vector<std::vector<std::pair<int, int>>>& adj, int startNode) : 
     graph(adj),
     visited(adj.size(), false),
     finished(false),

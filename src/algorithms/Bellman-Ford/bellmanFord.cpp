@@ -1,7 +1,7 @@
 #include "bellmanFord.h"
 const long long MAX_VALUE = 1e18;
 
-BellmanFord::BellmanFord(const vector<vector<pair<int, int>>>& adj, int startNode) : 
+BellmanFord::BellmanFord(const std::vector<std::vector<std::pair<int, int>>>& adj, int startNode) : 
     graph(adj),
     distances(adj.size(), MAX_VALUE),
     finished(false),

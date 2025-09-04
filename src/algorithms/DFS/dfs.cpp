@@ -1,6 +1,6 @@
 #include "dfs.h"
 
-DFS::DFS(const vector<vector<pair<int, int>>>& adj, int startNode) : 
+DFS::DFS(const std::vector<std::vector<std::pair<int, int>>>& adj, int startNode) : 
     graph(adj),
     visited(adj.size(), false),
     finished(false),

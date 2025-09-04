@@ -41,6 +41,7 @@ namespace ColorConstants {
 
 namespace NodeConstants {
     inline constexpr int MAX_NODES = 1000;
+    inline constexpr float INVALID_RADIUS = 0.0f;
     inline constexpr float SMALL_RADIUS = 30.0f;
     inline constexpr float MEDIUM_RADIUS = 50.0f;
     inline constexpr float LARGE_RADIUS = 70.0f;

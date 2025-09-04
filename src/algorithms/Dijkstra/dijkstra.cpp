@@ -1,7 +1,7 @@
 #include "dijkstra.h"
 const long long MAX_VALUE = 1e18;
 
-Dijkstra::Dijkstra(const vector<vector<pair<int, int>>>& adj, int startNode) : 
+Dijkstra::Dijkstra(const std::vector<std::vector<std::pair<int, int>>>& adj, int startNode) : 
     graph(adj),
     distances(adj.size(), MAX_VALUE),
     visited(adj.size(), false),

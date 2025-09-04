@@ -5,16 +5,13 @@
 #include <vector>
 #include <tuple>
 
-using std::vector;
-using std::pair;
-
 class BellmanFord : public TraversalAlgorithm {
 private:
-    const vector<vector<pair<int, int>>>& graph;
-    vector<std::tuple<int, int, int>> edges;
-    vector<long long> distances;
+    const std::vector<std::vector<std::pair<int, int>>>& graph;
+    std::vector<std::tuple<int, int, int>> edges;
+    std::vector<long long> distances;
     bool finished;
-    vector<Step> history;
+    std::vector<Step> history;
 
     int currentStepIndex = -1;
     int start;
@@ -23,7 +20,7 @@ private:
     int currentEdgeIndex;
 
 public:
-    BellmanFord(const vector<vector<pair<int, int>>>& adj, int startNode);
+    BellmanFord(const std::vector<std::vector<std::pair<int, int>>>& adj, int startNode);
 
     Step stepForward();
     Step stepBackward();

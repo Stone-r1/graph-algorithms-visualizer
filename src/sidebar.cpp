@@ -4,23 +4,15 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <unordered_map>
 
-float topButtons;
-
-// TODO: Replace this ugly block later
-// TODO: Replace UI and Functionality
-static const std::unordered_map<RadiusSize, float> RadiusValues = {
-    {RadiusSize::Small, NodeConstants::SMALL_RADIUS},
-    {RadiusSize::Medium, NodeConstants::MEDIUM_RADIUS},
-    {RadiusSize::Large, NodeConstants::LARGE_RADIUS}
-};
-
-static RadiusSize labelToRadiusEnum(const std::string& label) {
-    if (label == LabelNames::SMALL) return RadiusSize::Small;
-    if (label == LabelNames::MEDIUM) return RadiusSize::Medium;
-    if (label == LabelNames::LARGE) return RadiusSize::Large;
-    return RadiusSize::None;
+// local helper
+namespace {
+    static float getRadiusValue(const std::string& label) {
+        if (label == LabelNames::SMALL) return NodeConstants::SMALL_RADIUS;
+        if (label == LabelNames::MEDIUM) return NodeConstants::MEDIUM_RADIUS;
+        if (label == LabelNames::LARGE) return NodeConstants::LARGE_RADIUS;
+        return NodeConstants::INVALID_RADIUS; 
+    }
 }
 
 Sidebar::Sidebar(int screenHeight) :
@@ -31,7 +23,6 @@ Sidebar::Sidebar(int screenHeight) :
 {
     using namespace UIConstants;
 
-    float buttonHeight = 60.0f;
     float buttonWidth = width - 2 * MARGIN;
     float buttonX = x + (width - buttonWidth) / 2;
     float yOffset = ystart + 3 * MARGIN;
@@ -46,8 +37,8 @@ Sidebar::Sidebar(int screenHeight) :
     };
 
     for (const auto& label : labels) {
-        buttons.emplace_back(Rectangle{buttonX + MARGIN, yOffset, buttonWidth, buttonHeight}, label);
-        yOffset += (buttonHeight + MARGIN);
+        buttons.emplace_back(Rectangle{buttonX + MARGIN, yOffset, buttonWidth, BUTTON_HEIGHT}, label);
+        yOffset += (BUTTON_HEIGHT + MARGIN);
     }
 
     topButtons = yOffset;
@@ -65,14 +56,14 @@ Sidebar::Sidebar(int screenHeight) :
 
     for (int i = 0; i < radiusLabels.size(); ++i) {
         float buttonX = baseX + i * (buttonWidth + MARGIN);
-        radiuses.emplace_back(Rectangle{buttonX, radiusY, buttonWidth, buttonHeight}, radiusLabels[i]);
+        radiuses.emplace_back(Rectangle{buttonX, radiusY, buttonWidth, BUTTON_HEIGHT}, radiusLabels[i]);
         if (radiusLabels[i] == LabelNames::MEDIUM) {
             // default value
             radiuses[i].isClicked = true;
         }
     }
 
-    yOffset += buttonHeight + MARGIN; 
+    yOffset += BUTTON_HEIGHT + MARGIN; 
 }
 
 void Sidebar::draw(const Font& font) {
@@ -179,16 +170,6 @@ bool Sidebar::isButtonClicked(const std::string& label) {
     return false;
 }
 
-RadiusSize Sidebar::getSelectedRadiusSize() const {
-    for (const auto& button : radiuses) {
-        if (button.isClicked) {
-            return labelToRadiusEnum(button.getButtonLabel());
-        }
-    }
-
-    return RadiusSize::None;
-}
-
 void Sidebar::flipGraphWeight() {
     for (auto& button : buttons) {
         if (button.getButtonLabel() == LabelNames::WEIGHTED) {
@@ -199,9 +180,14 @@ void Sidebar::flipGraphWeight() {
 }
 
 float Sidebar::getSelectedRadius() const {
-    RadiusSize selected = getSelectedRadiusSize();
-    auto it = RadiusValues.find(selected);
-    return (it != RadiusValues.end() ? it->second : 0.0f);
+    for (const auto& button : radiuses) {
+        if (button.isClicked) {
+            return getRadiusValue(button.getButtonLabel());
+        }
+    }
+
+    // default
+    return NodeConstants::MEDIUM_RADIUS;
 }
 
 void Sidebar::resetClicks() {
