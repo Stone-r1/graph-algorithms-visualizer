@@ -44,6 +44,8 @@ public:
     void clear();
 
     std::optional<Vector2> isInNodeDomain(const Vector2& mousePosition);
+    bool isInBoardBorderDomain(const Vector2& mousePosition, const float& currentRadius,
+                               const int& screenWidth, const int& screenHeight);
 
     void addNode(const Vector2& mousePosition, const float& currentRadius);
     void addEdge(const Vector2& firstNodePosition, const Vector2& secondNodePosition, int weight = 1);

@@ -4,8 +4,7 @@
 #include "raylib.h"
 #include "sidebar.h"
 #include "constants.h"
-// TODO: User should not be able to place node on the edge of the screen
-// TODO: Window should be resizable with minSize as it is now
+
 float radius;
 static std::optional<Vector2> firstNode = std::nullopt;
 static std::optional<Vector2> lastNode = std::nullopt;
@@ -28,7 +27,8 @@ void handleLeftClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
         return;
     }
 
-    if (!sidebar.isInSidebarDomain(mouse, radius)) {
+    if (!sidebar.isInSidebarDomain(mouse, radius) &&
+            !board.isInBoardBorderDomain(mouse, radius, GetScreenWidth(), GetScreenHeight())) {
         board.addNode(mouse, radius);
     } else {
         sidebar.handleMouse(mouse);
@@ -127,8 +127,8 @@ void handleRightClick(Board& board, Sidebar& sidebar, Vector2 mouse) {
 
 int main() {
     int monitor = GetCurrentMonitor();
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(1200, 800, "Graph Visualizer");
-    SetWindowMinSize(1200, 800);
     SetTargetFPS(60);
 
     Board board;

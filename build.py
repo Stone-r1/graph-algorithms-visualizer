@@ -50,7 +50,6 @@ def main():
             run(["cmake", ".."])
 
         run(["cmake", "--build", "."])
-        os.chdir("build") 
 
 if __name__ == "__main__":
     main()

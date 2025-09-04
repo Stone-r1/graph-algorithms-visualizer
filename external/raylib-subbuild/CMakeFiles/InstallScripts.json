@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/stoney/programming/graph/external/raylib-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

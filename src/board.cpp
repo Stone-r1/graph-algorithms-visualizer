@@ -56,6 +56,16 @@ std::optional<Vector2> Board::isInNodeDomain(const Vector2& mousePosition) {
     return std::nullopt;
 }
 
+bool Board::isInBoardBorderDomain(const Vector2& mousePosition, const float& currentRadius,
+                                  const int& screenWidth, const int& screenHeight) {
+    
+    const float allowedMargin = 1.5f * currentRadius;
+    return (mousePosition.y <= allowedMargin ||
+            mousePosition.y >= screenHeight - allowedMargin ||
+            mousePosition.x <= allowedMargin ||
+            mousePosition.x >= screenWidth - allowedMargin);
+}
+
 void Board::addNode(const Vector2& mousePosition, const float& currentRadius) {
     for (const Node& node : nodes) {
         float minDistance = node.getNodeRadius() * 3;
