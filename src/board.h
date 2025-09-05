@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <memory>
 #include <optional>
+#include <functional>
 
 #include "raylib.h"
 #include "node.h"
@@ -32,6 +33,7 @@ private:
     std::unique_ptr<TraversalAlgorithm> currentAlgo;
 
     Node* findNodeFromPosition(const Vector2& firstNodePosition);
+    bool runAlgorithm(const Vector2& mousePosition, bool weightRequired, std::function<std::unique_ptr<TraversalAlgorithm>(int)> algorithmConstructor);
 
 public:
     Board();

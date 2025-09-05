@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <iostream>
 #include <cmath>
 
 #include "board.h"
@@ -48,6 +47,24 @@ Node* Board::findNodeFromPosition(const Vector2& firstNodePosition) {
         }
     }
     return nullptr;
+}
+
+// general pattern for running algorithm
+bool Board::runAlgorithm(const Vector2& mousePosition, bool weightRequired, std::function<std::unique_ptr<TraversalAlgorithm>(int)> algorithmConstructor) {
+    if (weightRequired != isGraphWeighted()) {
+        // graph must be weighted/not weighted to run | later for UI
+        return false;
+    } 
+
+    Node* startNode = findNodeFromPosition(mousePosition);
+    if (!startNode) {
+        return false;
+    }
+
+    resetRunning();
+    currentAlgo = algorithmConstructor(startNode -> getNodeIndex());
+    isRunning = true;
+    return true;
 }
 
 std::optional<Vector2> Board::isInNodeDomain(const Vector2& mousePosition) {
@@ -277,71 +294,19 @@ bool Board::isAlgorithmRunning() const {
 }
 
 bool Board::runBFS(const Vector2& startNodePosition) {
-    if (isGraphWeighted()) {
-        std::cout << "Graph should be not be weighted to run BFS\n";
-        return false;
-    }
-
-    Node* startNode = findNodeFromPosition(startNodePosition);
-    if (startNode) {
-        resetRunning();
-        currentAlgo = std::make_unique<BFS>(graph, startNode->getNodeIndex());
-        isRunning = true;
-        return true;
-    }
-
-    return false;
+    return runAlgorithm(startNodePosition, false, [this](int startNodeIndex){return std::make_unique<BFS>(graph, startNodeIndex);});
 }
 
 bool Board::runDFS(const Vector2& startNodePosition) {
-    if (isGraphWeighted()) {
-        std::cout << "Graph should be not be weighted to run DFS\n";
-        return false;
-    }
-
-    Node* startNode = findNodeFromPosition(startNodePosition);
-    if (startNode) {
-        resetRunning();
-        currentAlgo = std::make_unique<DFS>(graph, startNode->getNodeIndex());
-        isRunning = true;
-        return true;
-    }
-
-    return false;
+    return runAlgorithm(startNodePosition, false, [this](int startNodeIndex){return std::make_unique<DFS>(graph, startNodeIndex);});
 }
 
 bool Board::runDijkstra(const Vector2& startNodePosition) {
-    if (!isGraphWeighted()) {
-        std::cout << "Graph must be weighted to run dijkstra\n";
-        return false;;
-    }
-
-    Node* startNode = findNodeFromPosition(startNodePosition);
-    if (startNode) {
-        resetRunning();
-        currentAlgo = std::make_unique<Dijkstra>(graph, startNode->getNodeIndex());
-        isRunning = true;
-        return true;
-    }
-
-    return false;
+    return runAlgorithm(startNodePosition, true, [this](int startNodeIndex){return std::make_unique<Dijkstra>(graph, startNodeIndex);});
 }
 
 bool Board::runBellmanFord(const Vector2& startNodePosition) {
-    if (!isGraphWeighted()) {
-        std::cout << "Graph must be weighted to run dijkstra\n";
-        return false;
-    }
-
-    Node* startNode = findNodeFromPosition(startNodePosition);
-    if (startNode) {
-        resetRunning();
-        currentAlgo = std::make_unique<BellmanFord>(graph, startNode->getNodeIndex());
-        isRunning = true;
-        return true;
-    }
-
-    return false;
+    return runAlgorithm(startNodePosition, true, [this](int startNodeIndex){return std::make_unique<BellmanFord>(graph, startNodeIndex);});
 }
 
 void Board::highlightNode(int index) {
